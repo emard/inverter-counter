@@ -1,0 +1,490 @@
+(* e800-inverter-counter-v76 *)
+(* comments take up program space *)
+(*
+Connect mini usb cable
+Windows 10 -> FR Configurator2
+Project -> New -> Auto recognize -> Yes -> OK
+Tool -> Developer -> Project -> New
+Project Type: Structured Project
+PLC Type: FR-800 Series
+Language: ST
+-> OK
+Copy-paste this program (.txt) to editor Program [ST] window
+
+Enable IF/THEN loops
+If this is not enabled, compile error will appear:
+insufficient number of Pointer points in device/label automatic-setting
+Tool -> Device/Label Automatic-Assign Setting...
+                     Device  Digit  Assign      Assignment Range   Total Points
+                                    Selection   Start      End
+Pointer -> VAR Range P       10     [x]         2048       4095    2048
+
+Compile: Press F4 or click icon
+Below Project..Help is icon list, second to the right is icon
+which looks like txt document with orange
+arrow on lower left corner and at mouse-over
+it shows "Build (F4)"
+if P.RUN blinks after upload, power OFF/ON inverter,
+P.RUN shold light up and stay.
+if P.RUN blinks after power OFF/ON, change code.
+Some line causes runtime error. Difficult to find.
+To reset saved speed, hold STOP while power ON.
+*)
+(*
+copy-paste this global labels
+Project -> Global Label -> Global1
+or
+Navigation -> Project -> Global Label -> Global1
+-----8<-----copy-paste-begin-----8<----
+VAR_GLOBAL_CONSTANT	PLC_TAKES_START_STOP_CTRL	Word[Signed]	H0FFF				
+VAR_GLOBAL_CONSTANT	DIAL_PUSH_MS	Word[Signed]	H3000			0 format while dial is pushed cycle time in ms blinks	
+VAR_GLOBAL_CONSTANT	EXT_MODE	Word[Signed]	1			EXT mode For SD1140 and SD1143	
+VAR_GLOBAL_CONSTANT	DIAL_PUSH_FF_SS	Word[Signed]	H3200			FF.SS format While Dial is pushed too fast/slow count FF.SS blinks	
+VAR_GLOBAL_CONSTANT	PU_MODE	Word[Signed]	2			PU mode For SD1140 and SD1143	
+VAR_GLOBAL	PU_EXT_CHANGE_COUNT	Word[Signed]		C6	%MW4.6	counts every change of PU/EXT mode	
+VAR_GLOBAL	CURRENT_CYCLE_TIMESTAMP	Word[Signed]		D0	%MW0.0		
+VAR_GLOBAL	LAST_CYCLE_TIMESTAMP	Word[Signed]		D1	%MW0.1		
+VAR_GLOBAL	MEASURED_CYCLE_TIME	Word[Signed]		D2	%MW0.2		
+VAR_GLOBAL	LAST_PU_EXT_MODE	Word[Signed]		D6	%MW0.6	pu/ext state from previous cycle	
+VAR_GLOBAL	SAMPLING_COUNTER	Word[Signed]		D10	%MW0.10	Counts every P.1151 cycles to trigger measure cycle time	
+VAR_GLOBAL	TOO_FAST_COUNTS	Word[Signed]		D11	%MW0.11	Counts too fast cycles	
+VAR_GLOBAL	TOO_SLOW_COUNTS	Word[Signed]		D12	%MW0.12	Counts too slow cycles	
+VAR_GLOBAL	CTRL_PULSE_WIDTH	Word[Signed]		D15	%MW0.15	*0.1s pulse for slower/faster	
+VAR_GLOBAL	INIT_COUNTS	Word[Signed]		D206	%MW0.206	Initial starting counts	P.1150=22 [counts]
+VAR_GLOBAL	SAMPLE_CYCLES	Word[Signed]		D207	%MW0.207	measure cycle time every N revolutions	P.1151=10 [counts]
+VAR_GLOBAL	PU_CTRL_STEP_HZ100	Word[Signed]		D208	%MW0.208	unused PU mode control loop frequency step	P.1152=10 [Hz/100]
+VAR_GLOBAL	PID_SETPOINT	Word[Signed]		D209	%MW0.209	PID set point cycle time	P.1153=6000 [ms]
+VAR_GLOBAL	MIN_CYCLE_TIME	Word[Signed]		D210	%MW0.210	MIN allowed cycle time (too fast)	P.1154=5715 [ms]
+VAR_GLOBAL	MAX_CYCLE_TIME	Word[Signed]		D211	%MW0.211	MAX allowed cycle time (too slow)	P.1155=6315 [ms]
+VAR_GLOBAL	MAX_TOO_FAST_COUNTS	Word[Signed]		D212	%MW0.212	MAX too fast *N cycles	P.1156=10 [counts*P.1151]
+VAR_GLOBAL	MAX_TOO_SLOW_COUNTS	Word[Signed]		D213	%MW0.213	MAX too slow *N cycles	P.1157=10 [counts*P.1151]
+VAR_GLOBAL	MAX_ROTATION_TIMEOUT	Word[Signed]		D214	%MW0.214	MAX time of motor powered without rotation	P.1158=150 [s/10]
+VAR_GLOBAL	STOP_COUNTS	Word[Signed]		D215	%MW0.215	Counts when motor should stops early	P.1159=0 [counts]
+VAR_GLOBAL	MAX_COUNTS_ALLOW_INCREASE	Word[Signed]		D216	%MW0.216	for countdown < P.1160 allow START to increase countdown	P.1160=22 [counts]
+VAR_GLOBAL	INCREASE_STEP	Word[Signed]		D217	%MW0.217	number of counts to increase counter while running	P.1161=10 [counts]
+VAR_GLOBAL	DIAL_PUSH_MODE	Word[Signed]		D218	%MW0.218	1-FF.SS too fast/slow 0-cycle time [ms]	P.1162=1 [counts.counts]
+VAR_GLOBAL	START_DELAY	Word[Signed]		D219	%MW0.219	For start button debounce usually 1 for 0.1s delay	P.1163=1 [s/10]
+VAR_GLOBAL	RESTART_AT_POWER_ON	Word[Signed]		D220	%MW0.220	power on restart 1-enabled 0-disabled	P.1164=1
+VAR_GLOBAL	BOOT_PU_EXT_MODE	Word[Signed]		D222	%MW0.222	Boot to 1:EXT or 2:PU mode	P.1166=2
+VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1195=22 [counts]
+VAR_GLOBAL	SAVED_MOTOR_ENABLE	Word[Signed]		D253	%MW0.253	Saved motor run state M9	P.1197=0
+VAR_GLOBAL	RUN_ROTATION_PULSE	Bit		M3	%MX0.3	when motor is running pulse from sensor	
+VAR_GLOBAL	MOTOR_ENABLE	Bit		M9	%MX0.9	Motor run state	
+VAR_GLOBAL	SAMPLE_PULSE	Bit		M10	%MX0.10	sample now	
+VAR_GLOBAL	START_PULSE	Bit		M11	%MX0.11	Joint start PU or EXT	
+VAR_GLOBAL	STOP_TOO_FAST	Bit		M12	%MX0.12	Too much too slow cycles	
+VAR_GLOBAL	STOP_TOO_SLOW	Bit		M13	%MX0.13	Too much too fast cycles	
+VAR_GLOBAL	STILL_COUNTING_DOWN	Bit		M14	%MX0.14	While still counting	
+VAR_GLOBAL	EXT_START_PULSE	Bit		M15	%MX0.15	Start pulse from delayed START EXT switch	
+VAR_GLOBAL	PU_START_PULSE	Bit		M16	%MX0.16	Start pulse from PU start button	
+VAR_GLOBAL	PU_EXT_CHANGE_PULSE	Bit		M17	%MX0.17	Reset counter after changing of pu/ext modes	
+VAR_GLOBAL	STOP_LOGIC	Bit		M19	%MX0.19	Combinatorial logic that stops machine	
+VAR_GLOBAL	INCREASE_WHILE_RUNNING	Bit		M23	%MX0.23	START pressed second time may increase counter	
+VAR_GLOBAL	COUNTS_RESET_LOGIC	Bit		M24	%MX0.24	Resets counter when changing PU/EXT and other	
+VAR_GLOBAL	COUNTS_RESET_PULSE	Bit		M25	%MX0.25	Pulse to Reset counter	
+VAR_GLOBAL	SW_ROTATION_PULSE	Bit		M26	%MX0.26	Rising edge of SW_ROTATION	
+VAR_GLOBAL	ROTATION_DURING_RUN	Bit		M27	%MX0.27	Update counters when motor runs	
+VAR_GLOBAL	INIT_RESET_COUNTS	Bit		M28	%MX0.28	Used during init	
+VAR_GLOBAL	POWER_ON_DELAYED_PULSE	Bit		M29	%MX0.29	pulse once 0.1s after power on	not used
+VAR_GLOBAL	FINE_CONTROL	Bit		M30	%MX0.30	use fine speed control	
+VAR_GLOBAL	SET_EXT_LOGIC	Bit		M31	%MX0.31	change to EXT mode	
+VAR_GLOBAL	SET_PU_LOGIC	Bit		M32	%MX0.32	change to PU mode	
+VAR_GLOBAL	PLC_CYCLE_MS	Word[Signed]		SD520	%MW10.520	[ms] PLC execution cycle of whole code	
+VAR_GLOBAL	RD_PU_EXT_MODE	Word[Signed]		SD1140	%MW10.1140	read current pu/ext operating mode	Y20
+VAR_GLOBAL	WR_PU_EXT_MODE	Word[Signed]		SD1143	%MW10.1143	write current pu/ext operating mode	Y23
+VAR_GLOBAL	WR_PU_HZ100	Word[Signed]		SD1144	%MW10.1144	[Hz*100] Write motor frequency for PU mode	Y24
+VAR_GLOBAL	PLC_MOTOR_SOFT_REG_CTRL	Word[Signed]		SD1148	%MW10.1148	PLC soft reg control	
+VAR_GLOBAL	PLC_MOTOR_RUN_CTRL	Word[Signed]		SD1149	%MW10.1149	PLC takes motor control	
+VAR_GLOBAL	USER_ERROR	Word[Signed]		SD1214	%MW10.1214	Store 16 - 19 to generate E.16 - E.19 error	
+VAR_GLOBAL	DISPLAY_FORMAT	Word[Signed]		SD1215	%MW10.1215	Format 7seg LED display PLC manual 1.10.8	
+VAR_GLOBAL	DISPLAY_DIAL_PUSH	Word[Signed]		SD1216	%MW10.1216	LED display when dial is pushed 0:[ms] cycle time or 1:counts  too fast/slow cycles	
+VAR_GLOBAL	DISPLAY_RUN_TIME	Word[Signed]		SD1217	%MW10.1217	Run time [s] displayed	
+VAR_GLOBAL	DISPLAY_COUNTS	Word[Signed]		SD1218	%MW10.1218	Counts displayed	
+VAR_GLOBAL	PID_DEVIATION	Word[Signed]		SD1248	%MW10.1248	deviation from setpoint	
+VAR_GLOBAL	PLC_PID_CTRL	Word[Signed]		SD1255	%MW10.1255	PLC PID control	
+VAR_GLOBAL	POWER_ON_PULSE	Bit		SM402	%MX10.402	Pulse at power on	
+VAR_GLOBAL	MOTOR_RUN	Bit		SM1200	%MX10.1200	write TRUE to run motor	
+VAR_GLOBAL	RUN_FASTER	Bit		SM1202	%MX10.1202	internal RH	
+VAR_GLOBAL	RUN_SLOWER	Bit		SM1203	%MX10.1203	internal RM	
+VAR_GLOBAL	RUN_MAIN_SPEED	Bit		SM1204	%MX10.1204	internal RL	
+VAR_GLOBAL	IS_MOTOR_RUNNING	Bit		SM1216	%MX10.1216	True when motor is running	
+VAR_GLOBAL	PLC_MOTOR_USE_SOFT_REG_CTRL	Bit		SM1255	%MX10.1255	SM1255=FALSE to run motor with SM1200 and ignore SD1148	
+VAR_GLOBAL	START_DELAYED	Bit		TS0	%MX3.0	Timer T0 provides delayed/debounced START button signal	
+VAR_GLOBAL	RUN_1S_PULSE	Bit		TS1	%MX3.1	Timer T1 every 1s when motor runs	
+VAR_GLOBAL	SW_STOP_HOLDING	Bit		TS2	%MX3.2	Timer T2 becomes true after 1s of holding SW_STOP button	
+VAR_GLOBAL	RUN_WITHOUT_SENSOR	Bit		TS3	%MX3.3	Timer T3 triggers when motor runs but sensor is not working	
+VAR_GLOBAL	POWER_ON_DELAYED	Bit		TS5	%MX3.5	Timer T5 Becomes true 0.1s after power on	
+VAR_GLOBAL	PU_EXT_READ_PULSE	Bit		TS6	%MX3.6	Timer T6 pulses every 0.5 s to read PU/EXT state	
+VAR_GLOBAL	CTRL_PULSE	Bit		TS7	%MX3.7	Timer T7 for faster/slower pulse width active low	
+VAR_GLOBAL	SW_START	Bit		X2	%IX2	Green START Button	RH (NO)
+VAR_GLOBAL	SW_ROTATION	Bit		X3	%IX3	Inductive sensr	RM (NO)
+VAR_GLOBAL	SW_STOP	Bit		X4	%IX4	Red STOP Button	RL (NO)
+VAR_GLOBAL	SW_DOOR	Bit		X0B	%IX11	Door switch	RES (NO)
+VAR_GLOBAL	ABC_RELAY	Bit		Y5	%QX5	ABC Relay	click
+VAR_GLOBAL	RD_PU_EXT_MODE_EN	Bit		Y20	%QX32	Internal signal to read operating mode PU/EXT	SD1140
+VAR_GLOBAL	WR_PU_EXT_MODE_EN	Bit		Y23	%QX35	Internal signal to write operating mode PU/EXT	SD1143
+-----8<-----copy-paste-end-----8<----
+*)
+
+(*
+wiring
+------
+E820S-0050:
+to open cover with power lines, AC supply and UVW motor output
+place flat screwdriver into "PUSH" hole and carefully lift screwhandle
+up, pushing down a plastic holder. Carefully, plastic is fragile.
+
+(use SINK logic all pins activated by connecting to GND)
+
+pin     function    description
+---     --------    -----------
+SD      GND         (common pin to pull other pins down)
+MRS     RUN PLC     (jumper to enable PLC always connected to SD)
+RES     DOOR        (external switch, PLC XB)
+RH      START       (external button, PLC X2)
+RM      COUNTER     (external sensor, PLC X3)
+RL      STOP        (external button, PLC X4)
+
+S1      safety1     (jumper to PC 24V)
+S2      safety2     (jumper to PC 24V)
+PC      24V         (24V 100mA power supply)
+
+schematics
+----------
+
+S1  S2  PC  RUN FU  SE
+│   │   │
+│   └───┤ JUMPER (FACTORY DEFAULT)
+├───────┘                             SENSOR
+└───────────────────────────────────  RED/BROWN +24V
+    ┌───────────────────────────────  BLACK     SIGNAL
+    │       ┌───────────────────────  BLUE      GND
+    │       │
+RL  RM  RH  SD  MRS RES SD  STF STR
+│        │   │   │   │   │   
+│        │   └───┤   └───────────────┐
+│        │       │       │            ┫ DOOR  (NO)
+│        │       └───────────────────┘
+│        │               ├───────────┐
+│        │               │            ┫ START (NO)
+│        └───────────────────────────┘
+│                        └───────────┐
+│                                     ┫ STOP  (NO)
+└────────────────────────────────────┘
+
+SINK
+┌─┐
+│▒│ switch position to "SINK"
+│ │
+└─┘
+SOURCE
+
+Inductive sensor XEPRO IPS12-S4NO50-A2P DC 10-30V NPN/open collector,
+normally open contact.
+When object is approached, sensor makes contact between SIGNAL and GND.
+
+setup for first use
+-------------------
+
+reset all parameters (but PLC program will stay)
+MODE -> Turn dial anticlockwise -> ALLC -> SET -> 0 
+-> rotate change to 1 -> SET -> 1 should blink
+
+set parameters:
+--------------
+  ALLC    1        resets most parameters to factory default
+  P.0     4.0   %  torque boost (required to start)
+  P.1    50.00  Hz max freq
+  P.2    48.00  Hz min freq this is default running freq
+  P.7    30.0   s  Acceleration time (required to start)
+  P.8     0.5   s  Deceleration time (adjust to park)
+  P.9     3.80  A  rated motor current (required to start)
+  P.13   40.00  Hz starting frequency (required to start)
+  P.14    0        load pattern selection 0:V/f = const 1:V/f^2 = const
+  P.15   48.00  Hz freq in "JOG" mode while holding "RUN" button
+  P.22    150   %  stall prevention
+  P.29    1        s-pattern acceleration/decelration
+  P.44   20.0   s  2nd acceleration (RH/RM remote control)
+  P.45   20.0   s  2nd deceleration (RH/RM remote control)
+  P.59    1        0:multispeed RH/RM/RL, 1:RH/RM faster/slower remembers, 2:faster/slower forgets
+  P.60    9        power saving, (required to start)
+  P.72    0    kHz 0-default 0.7kHz, 15kHz fastest PWM, "silent" operation
+  P.79    6        PU start, PU frequency set, LED PU should turn ON
+  P.82    0.00  A  motor excitation current
+  P.127  48.00  Hz PID start with linear accelerate to this freq, then switch to PID control
+  P.128   0        0:No PID (default), 1010:PID (optional)
+  P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
+  P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
+  P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
+  P.261   1        on power failure, decelerate to stop
+  P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
+  P.414   1        PLC enable (doesn't reset by ALLC, LED P.RUN should turn ON, not blink)
+  P.571   2      s Holding time at start
+  P.609   5        PLC is source of deviation value, write -10000..+10000 to SD1248
+  P.610   5        PLC is source of measured value (not used)
+  P.675   1        PLC auto-save P.1195-P.1199 PLC D251-D255 at power off
+  P.775   42       LED 2nd menu displays countdown value at SD1217 (instead of motor current A)
+* P.775   2        LED 2nd menu shows motor current A
+  P.776   41       LED 3rd menu displays run time value at SD1218
+* P.776   2        LED 3rd menu shows motor current A
+  P.801   9999     output limit level (9999-from P.22) others override P.22?
+  P.803   1        0-torq constant, 1-torq rising (required to start)
+  P.810   0        0-torq limit by parameters, ignore external
+  P.816   9999     torq limit acceleration
+  P.817   9999     torq limit deceleration
+  P.874   400 %    overload shutdown torq OLT limit maximum
+  P.888   76       free parameter, parameters version
+  P.889   76       free parameter, program version
+  P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
+  P.1150  12000    D206 Number of cycles (initial countdown)
+  P.1151  10       D207 measure time of N cycles
+  P.1152  0        D208 unused
+  P.1153  6000  ms D209 PID setpoint time ideal for N cycles P.1151=10 6000ms 100rpm D208->D209
+  P.1154  5715  ms D210 MIN allowed cycle time for P.1151=10 5715ms 105rpm too fast limit E. 16
+  P.1155  6315  ms D211 MAX allowed cycle time for P.1151=10 6315ms  95rpm too slow limit E. 17
+  P.1156  10       D212 MAX allowed too fast cycles until STOP E. 16
+  P.1157  10       D213 MAX allowed too slow cycles until STOP E. 17
+  P.1158  50     s D214 *0.1 MAX allowed run time without cycle sensor signal, STOP E. 18
+  P.1159  0        D215 countdown early stop for slow deceleration to end with wanted number of cycles
+  P.1160  12000    D216 for countdown < P.1160 allow START to increase countdown
+  P.1161  2000     D217 if START is pressed during run, add this value to countdown
+  P.1162  0        D218 dial push shows 0:N cycle time, 1:too fast/slow error count
+  P.1163  1      s D219 *0.1 start button delay time (debounce)
+  P.1164  1        D220 after power failure 0:stop and counter reset, 1:continue
+  P.1165  9000  s  D221 max run time
+  P.1166  2        D222 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
+  P.1197  0        D253 auto-saved M9 motor on/off state
+
+for PID control set this:
+
+  P.127   48.00 Hz PID start with linear accelerate to this freq, then switch to PID control
+  P.128   1010     PID reverse action
+  P.1151  10       measure time of 1 cycle (each cycle), D207 in PLC
+  P.1153  6000  ms PID setpoint P.1151=1 cycle time          600ms 100rpm ideal
+  P.1154  5715  ms MIN allowed  P.1151=1 cycle time PLC D210 571ms 105rpm too fast limit
+  P.1155  6315  ms MAX allowed  P.1151=1 cycle time PLC D211 631ms  95rpm too slow limit
+
+explained PID P.128 parameter
+
+  P.128      0     No PID (default for this program)
+                   speed control using RH/RM "remote" control from internal PLC
+          1010     PID reverse action (can be used with this program)
+                   (when deviation is positive, frequency is increased),
+                   deviation by P.609, measured value by P.610
+          1011     PID forward action (not applicable for this program)
+                   (when deviation is positive, frequency is decreased),
+                   deviation by P.609, measured value by P.610
+
+troubleshooting
+---------------
+hold dial pushed, LED should blink and show either
+(P.1162=0) cycle time [ms] or
+(P.1162=1) cycle errors count in FF.SS format
+FF=count of too fast cycles, SS=count of too slow cycles
+this is not yet programmed in this source
+
+errors
+E. 16  reached max count too fast - check P.1154, P.1156
+E. 17  reached max count too slow - check P.1155, P.1157
+E. 18  sensor not working         - check P.1158
+E. 19  workaround to stop from p.79=6
+*)
+
+(* time accumulator done as early as possible *)
+CURRENT_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP+PLC_CYCLE_MS; (* ms *)
+
+(* initialization runs once at power on *)
+IF POWER_ON_PULSE THEN
+	PLC_MOTOR_RUN_CTRL:=PLC_TAKES_START_STOP_CTRL;
+	PLC_MOTOR_SOFT_REG_CTRL:=0;
+	PLC_PID_CTRL:=1;
+	PLC_MOTOR_USE_SOFT_REG_CTRL:=FALSE;
+	IF SAVED_COUNTS>STOP_COUNTS THEN
+		DISPLAY_COUNTS:=SAVED_COUNTS;
+		IF SAVED_MOTOR_ENABLE>0 THEN
+			MOTOR_ENABLE:=TRUE;
+		END_IF;
+	END_IF;
+	INIT_RESET_COUNTS:=SAVED_COUNTS<=STOP_COUNTS OR RESTART_AT_POWER_ON=0;
+	IF INIT_RESET_COUNTS THEN
+		DISPLAY_COUNTS:=INIT_COUNTS;
+		SAVED_MOTOR_ENABLE:=0;
+		MOTOR_ENABLE:=FALSE;
+	END_IF;
+END_IF;
+
+STILL_COUNTING_DOWN:=DISPLAY_COUNTS>STOP_COUNTS;
+MOTOR_RUN:=MOTOR_ENABLE AND STILL_COUNTING_DOWN
+AND POWER_ON_DELAYED;
+OUT_T(SW_STOP, SW_STOP_HOLDING, 10); (* 1s timer  to detect holding STOP button *)
+ABC_RELAY:=SW_STOP_HOLDING; (* audible click *)
+
+OUT_T(TRUE, POWER_ON_DELAYED, 1); (* becomes true 0.1s after power on, used to make proper startup *)
+(* PLS(POWER_ON_DELAYED, POWER_ON_DELAYED_PULSE); *)
+
+(* stop logic *)
+STOP_LOGIC:=POWER_ON_DELAYED AND
+(SW_STOP OR SW_DOOR
+OR STOP_TOO_FAST OR STOP_TOO_SLOW
+OR RUN_WITHOUT_SENSOR
+OR DISPLAY_RUN_TIME>=MAX_RUN_TIME
+);
+(* because of PU/EXT changing when in PU mode 
+MOTOR_ENABLE should track IS_MOTOR_RUNNING 
+but not SAVED_MOTOR_ENABLE
+to prevent unwanted start and allow restart after power on. this is slightly
+unclean logic workaround because different values are written
+to MOTOR_ENABLE and SAVED_MOTOR_ENABLE
+this prevents unwanted RUN from EXT mode without START pressed
+*)
+RST(STOP_LOGIC 
+OR (RD_PU_EXT_MODE=PU_MODE AND NOT(IS_MOTOR_RUNNING)),
+MOTOR_ENABLE);
+MOV(STOP_LOGIC, 0, SAVED_MOTOR_ENABLE);
+
+(* reads changing of PU/EXT mode when user presses PU/EXT button *)
+OUT_T(NOT(PU_EXT_READ_PULSE), PU_EXT_READ_PULSE, 1); (* every 0.1s read PU/EXT *)
+RD_PU_EXT_MODE_EN:=PU_EXT_READ_PULSE; (* pulse for hardware read *)
+IF PU_EXT_READ_PULSE THEN
+	IF RD_PU_EXT_MODE <> LAST_PU_EXT_MODE THEN
+		PU_EXT_CHANGE_COUNT:=PU_EXT_CHANGE_COUNT+1;
+	END_IF;
+	LAST_PU_EXT_MODE:=RD_PU_EXT_MODE;
+END_IF;
+MOVP(IS_MOTOR_RUNNING OR PU_EXT_CHANGE_PULSE,
+1, PU_EXT_CHANGE_COUNT);
+MOVP(NOT(IS_MOTOR_RUNNING) OR PU_EXT_CHANGE_PULSE,
+1, PU_EXT_CHANGE_COUNT);
+PLS(PU_EXT_CHANGE_COUNT>2, PU_EXT_CHANGE_PULSE); (* after 2 changes generate change pulse *)
+
+(* to start or stop motor, PLC must enter EXT mode *)
+SET_EXT_LOGIC:=POWER_ON_DELAYED
+AND NOT(STILL_COUNTING_DOWN) 
+AND NOT(MOTOR_RUN);
+(*
+for user convenience, when no EXT buttons available (RUN from PU)
+at power on PLC optionally (P.1166=2) sets to PU mode if motor is not enabled
+P.1166=2 boot to PU mode
+else
+P.1166<>2 boot to EXT mode (P.79=6 boots to EXT mode)
+*)
+SET_PU_LOGIC:=POWER_ON_PULSE AND
+NOT(MOTOR_ENABLE) AND BOOT_PU_EXT_MODE=2;
+MOVP(SET_EXT_LOGIC, EXT_MODE, WR_PU_EXT_MODE); (* 1 is EXT mode *)
+MOVP(SET_PU_LOGIC, PU_MODE, WR_PU_EXT_MODE); (* 2 is PU mode *)
+WR_PU_EXT_MODE_EN:=SET_EXT_LOGIC OR SET_PU_LOGIC;
+
+(* debounce START button with P.1163 [0.1s] timer delay*)
+OUT_T(SW_START, START_DELAYED, START_DELAY);
+(* filter start request (rising edge) to a single pulse *)
+PLS(START_DELAYED, EXT_START_PULSE);
+PLS(IS_MOTOR_RUNNING, PU_START_PULSE);
+(* joint start requests from EXT and PU *)
+START_PULSE:=EXT_START_PULSE OR PU_START_PULSE;
+(* start request initializes internal variables *)
+IF START_PULSE THEN
+	MOTOR_ENABLE:=TRUE;
+	SAVED_MOTOR_ENABLE:=1;
+	DISPLAY_DIAL_PUSH:=0;
+	TOO_FAST_COUNTS:=0;
+	TOO_SLOW_COUNTS:=0;
+	SAMPLING_COUNTER:=0;
+	MEASURED_CYCLE_TIME:=PID_SETPOINT;
+	LAST_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP;
+	IF DIAL_PUSH_MODE=0 THEN
+		DISPLAY_FORMAT:=DIAL_PUSH_MS; (* [ms] *)
+	ELSE
+		DISPLAY_FORMAT:=DIAL_PUSH_FF_SS; (* FF.SS too fast/slow counts *)
+	END_IF;
+END_IF;
+
+(* press START  or change PU/EXT while running to increase counts *)
+INCREASE_WHILE_RUNNING:=(EXT_START_PULSE OR PU_EXT_CHANGE_PULSE) AND IS_MOTOR_RUNNING
+AND (DISPLAY_COUNTS<MAX_COUNTS_ALLOW_INCREASE);
+MOVP(INCREASE_WHILE_RUNNING, DISPLAY_COUNTS+INCREASE_STEP, DISPLAY_COUNTS);
+
+(* reset counter *)
+COUNTS_RESET_LOGIC:=(START_PULSE AND NOT(STILL_COUNTING_DOWN))
+OR SW_STOP_HOLDING
+OR (PU_EXT_CHANGE_PULSE AND NOT(IS_MOTOR_RUNNING));
+PLS(COUNTS_RESET_LOGIC, COUNTS_RESET_PULSE);
+IF COUNTS_RESET_PULSE THEN
+	  DISPLAY_RUN_TIME:=0;
+	  DISPLAY_COUNTS:=INIT_COUNTS;
+	  SAVED_COUNTS:=INIT_COUNTS;
+END_IF;
+
+(* how long is the motor running *)
+OUT_T(IS_MOTOR_RUNNING AND NOT(RUN_1S_PULSE), 
+RUN_1S_PULSE, 10); (* tick to count run time *)
+INCP(RUN_1S_PULSE, DISPLAY_RUN_TIME);
+
+(* track rotation sensor *)
+PLS(SW_ROTATION, SW_ROTATION_PULSE);
+ROTATION_DURING_RUN:=IS_MOTOR_RUNNING
+AND SW_ROTATION_PULSE;
+IF ROTATION_DURING_RUN THEN
+	DISPLAY_COUNTS:=DISPLAY_COUNTS-1;
+	SAVED_COUNTS:=DISPLAY_COUNTS;
+	SAMPLING_COUNTER:=SAMPLING_COUNTER+1;
+END_IF;
+
+(* 
+counting rotation logic
+if motor is powered but no rotation within P.1158 timeout,
+then stop with user error E.18
+*)
+OUT_T(IS_MOTOR_RUNNING AND NOT(SW_ROTATION_PULSE),
+RUN_WITHOUT_SENSOR, MAX_ROTATION_TIMEOUT);
+IF RUN_WITHOUT_SENSOR THEN
+	USER_ERROR:=18;
+END_IF;
+
+(* sample every P.1151 cycles *)
+PLS(SAMPLING_COUNTER>=SAMPLE_CYCLES, SAMPLE_PULSE);
+MOVP(SAMPLE_PULSE, 0, SAMPLING_COUNTER);
+
+(* control loop *)
+IF SAMPLE_PULSE THEN
+	MEASURED_CYCLE_TIME:=CURRENT_CYCLE_TIMESTAMP-LAST_CYCLE_TIMESTAMP;
+	LAST_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP;
+	PID_DEVIATION:=MEASURED_CYCLE_TIME-PID_SETPOINT;
+	CTRL_PULSE_WIDTH:=0;
+	IF MEASURED_CYCLE_TIME<MIN_CYCLE_TIME THEN
+		TOO_FAST_COUNTS:=TOO_FAST_COUNTS+1;
+		DISPLAY_DIAL_PUSH:=DISPLAY_DIAL_PUSH+100; (* 100 to count upper 2 digits *)
+		IF TOO_FAST_COUNTS>MAX_TOO_FAST_COUNTS THEN
+			USER_ERROR:=16;
+		END_IF;
+		CTRL_PULSE_WIDTH:=(MIN_CYCLE_TIME-MEASURED_CYCLE_TIME)/16;
+	END_IF;
+	IF MEASURED_CYCLE_TIME>MAX_CYCLE_TIME THEN
+		TOO_SLOW_COUNTS:=TOO_SLOW_COUNTS+1;
+		DISPLAY_DIAL_PUSH:=DISPLAY_DIAL_PUSH+1; (* 1 to count lower 2 digits *)
+		IF TOO_SLOW_COUNTS>MAX_TOO_SLOW_COUNTS THEN
+			USER_ERROR:=17;
+		END_IF;
+		CTRL_PULSE_WIDTH:=(MEASURED_CYCLE_TIME-MAX_CYCLE_TIME)/16;
+	END_IF;
+	IF DIAL_PUSH_MODE=0 THEN
+		DISPLAY_DIAL_PUSH:=MEASURED_CYCLE_TIME;
+	END_IF;
+END_IF;
+
+OUT_T(NOT(SAMPLE_PULSE), CTRL_PULSE, CTRL_PULSE_WIDTH);
+RUN_FASTER:=MEASURED_CYCLE_TIME>MAX_CYCLE_TIME AND NOT(CTRL_PULSE);
+RUN_SLOWER:=MEASURED_CYCLE_TIME<MIN_CYCLE_TIME AND NOT(CTRL_PULSE);
+
+(*
+debug convenience:
+5s timer to generate user error, when E.16 is displayed then
+press STOP/RESET or re-upload code to reset PLC and
+re-execute this code from init
+*)
+(*
+OUT_T(TRUE, TS15, 600);
+IF TS15 THEN
+	USER_ERROR:=16;
+END_IF;
+*)
