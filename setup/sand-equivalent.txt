@@ -37,7 +37,7 @@ set parameters:
   P.261   1        on power failure, decelerate to stop
   P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
   P.414   1        PLC enable (doesn't reset by ALLC, LED P.RUN should turn ON, not blink)
-  P.571   2      s Holding time at start
+  P.571   9999   s Holding time at start
   P.609   5        PLC is source of deviation value, write -10000..+10000 to SD1248
   P.610   5        PLC is source of measured value (not used)
   P.675   1        PLC auto-save P.1195-P.1199 PLC D251-D255 at power off
