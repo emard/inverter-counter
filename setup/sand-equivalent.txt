@@ -55,7 +55,7 @@ set parameters:
   P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
   P.1150  90       D206 Number of cycles (initial countdown)
   P.1151  10       D207 measure time of N cycles
-  P.1152  0        D208 unused
+  P.1152  16       D208 regulation feedback 1-strong 1024-weak
   P.1153  3333  ms D209 PID setpoint time ideal for N cycles P.1151=10 3333ms 180rpm
   P.1154  3278  ms D210 MIN allowed cycle time for P.1151=10 3278ms 183rpm too fast limit E. 16
   P.1155  3390  ms D211 MAX allowed cycle time for P.1151=10 3390ms 177rpm too slow limit E. 17
