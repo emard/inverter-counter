@@ -1,0 +1,73 @@
+Parameters v33
+
+setup for first use
+-------------------
+
+reset all parameters (but PLC program will stay)
+MODE -> Turn dial anticlockwise -> ALLC -> SET -> 0 
+-> rotate change to 1 -> SET -> 1 should blink
+
+set parameters:
+--------------
+  ALLC    1        resets most parameters to factory default
+  P.0     4.0   %  torque boost (required to start)
+  P.1    50.00  Hz max freq
+  P.2    48.00  Hz min freq this is default running freq
+  P.7    30.0   s  Acceleration time (required to start)
+  P.8     0.5   s  Deceleration time (adjust to park)
+  P.9     3.80  A  rated motor current (required to start)
+  P.13   40.00  Hz starting frequency (required to start)
+  P.14    0        load pattern selection 0:V/f = const 1:V/f^2 = const
+  P.15   48.00  Hz freq in "JOG" mode while holding "RUN" button
+  P.22    150   %  stall prevention
+  P.29    1        s-pattern acceleration/decelration
+  P.44   20.0   s  2nd acceleration (RH/RM remote control)
+  P.45   20.0   s  2nd deceleration (RH/RM remote control)
+  P.59    1        0:multispeed RH/RM/RL, 1:RH/RM faster/slower remembers, 2:faster/slower forgets
+  P.60    9        power saving, (required to start)
+  P.72    0    kHz 0-default 0.7kHz, 15kHz fastest PWM, "silent" operation
+  P.79    6        PU start, PU frequency set, LED PU should turn ON
+  P.82    0.00  A  motor excitation current
+  P.127  48.00  Hz PID start with linear accelerate to this freq, then switch to PID control
+  P.128   0        0:No PID (default), 1010:PID (optional)
+  P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
+  P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
+  P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
+  P.261   1        on power failure, decelerate to stop
+  P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
+  P.414   1        PLC enable (doesn't reset by ALLC, LED P.RUN should turn ON, not blink)
+  P.571   2      s Holding time at start
+  P.609   5        PLC is source of deviation value, write -10000..+10000 to SD1248
+  P.610   5        PLC is source of measured value (not used)
+  P.675   1        PLC auto-save P.1195-P.1199 PLC D251-D255 at power off
+  P.775   42       LED 2nd menu displays countdown value at SD1217 (instead of motor current A)
+  P.776   41       LED 3rd menu displays run time value at SD1218
+* P.776   2        LED 3rd menu shows motor current A
+  P.801   9999     output limit level (9999-from P.22) others override P.22?
+  P.803   1        0-torq constant, 1-torq rising (required to start)
+  P.810   0        0-torq limit by parameters, ignore external
+  P.816   9999     torq limit acceleration
+  P.817   9999     torq limit deceleration
+  P.874   400 %    overload shutdown torq OLT limit maximum
+  P.888   33       free parameter, parameters version
+  P.889   33       free parameter, program version
+  P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
+  P.1150  12000    D206 Number of cycles (initial countdown)
+  P.1151  10       D207 measure time of N cycles
+  P.1152  0        D208 unused
+  P.1153  6000  ms D209 PID setpoint time ideal for N cycles P.1151=10 6000ms 100rpm D208->D209
+  P.1154  5715  ms D210 MIN allowed cycle time for P.1151=10 5715ms 105rpm too fast limit E. 16
+  P.1155  6315  ms D211 MAX allowed cycle time for P.1151=10 6315ms  95rpm too slow limit E. 17
+  P.1156  10       D212 MAX allowed too fast cycles until STOP E. 16
+  P.1157  10       D213 MAX allowed too slow cycles until STOP E. 17
+  P.1158  50     s D214 *0.1 MAX allowed run time without cycle sensor signal, STOP E. 18
+  P.1159  0        D215 countdown early stop for slow deceleration to end with wanted number of cycles
+  P.1160  12000    D216 for countdown < P.1160 allow START to increase countdown
+  P.1161  2000     D217 if START is pressed during run, add this value to countdown
+  P.1162  0        D218 dial push shows 0:N cycle time, 1:too fast/slow error count
+  P.1163  1      s D219 *0.1 start button delay time (debounce)
+  P.1164  1        D220 after power failure 0:stop and counter reset, 1:continue
+  P.1165  9000  s  D221 max run time
+  P.1166  2        D222 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
+  P.1197  0        D253 auto-saved M9 motor on/off state
