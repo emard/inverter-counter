@@ -6,7 +6,7 @@ E820S-0050(0.75K)-4
 or similar
 
 Old version with old wiring,
-use ST code it is newer,
+Use ST code it is newer,
 easier to understand and modify.
 
 Ladder code uses less resources than ST
