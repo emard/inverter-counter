@@ -1,4 +1,4 @@
-(* e800-inverter-counter-v76 *)
+(* e800-inverter-counter-v77 *)
 (* comments take up program space *)
 (*
 Connect mini usb cable
@@ -18,6 +18,7 @@ Tool -> Device/Label Automatic-Assign Setting...
                      Device  Digit  Assign      Assignment Range   Total Points
                                     Selection   Start      End
 Pointer -> VAR Range P       10     [x]         2048       4095    2048
+
 
 Compile: Press F4 or click icon
 Below Project..Help is icon list, second to the right is icon
@@ -52,7 +53,7 @@ VAR_GLOBAL	TOO_SLOW_COUNTS	Word[Signed]		D12	%MW0.12	Counts too slow cycles
 VAR_GLOBAL	CTRL_PULSE_WIDTH	Word[Signed]		D15	%MW0.15	*0.1s pulse for slower/faster	
 VAR_GLOBAL	INIT_COUNTS	Word[Signed]		D206	%MW0.206	Initial starting counts	P.1150=22 [counts]
 VAR_GLOBAL	SAMPLE_CYCLES	Word[Signed]		D207	%MW0.207	measure cycle time every N revolutions	P.1151=10 [counts]
-VAR_GLOBAL	PU_CTRL_STEP_HZ100	Word[Signed]		D208	%MW0.208	unused PU mode control loop frequency step	P.1152=10 [Hz/100]
+VAR_GLOBAL	CTRL_PULSE_FEEDBACK	Word[Signed]		D208	%MW0.208	control loop feedback 1-strong 1025-weak	P.1152=16 [0.1*s]
 VAR_GLOBAL	PID_SETPOINT	Word[Signed]		D209	%MW0.209	PID set point cycle time	P.1153=6000 [ms]
 VAR_GLOBAL	MIN_CYCLE_TIME	Word[Signed]		D210	%MW0.210	MIN allowed cycle time (too fast)	P.1154=5715 [ms]
 VAR_GLOBAL	MAX_CYCLE_TIME	Word[Signed]		D211	%MW0.211	MAX allowed cycle time (too slow)	P.1155=6315 [ms]
@@ -65,6 +66,7 @@ VAR_GLOBAL	INCREASE_STEP	Word[Signed]		D217	%MW0.217	number of counts to increas
 VAR_GLOBAL	DIAL_PUSH_MODE	Word[Signed]		D218	%MW0.218	1-FF.SS too fast/slow 0-cycle time [ms]	P.1162=1 [counts.counts]
 VAR_GLOBAL	START_DELAY	Word[Signed]		D219	%MW0.219	For start button debounce usually 1 for 0.1s delay	P.1163=1 [s/10]
 VAR_GLOBAL	RESTART_AT_POWER_ON	Word[Signed]		D220	%MW0.220	power on restart 1-enabled 0-disabled	P.1164=1
+VAR_GLOBAL	MAX_RUN_TIME	Word[Signed]		D221	%MW0.221	max run time [s]	P.1165=9000
 VAR_GLOBAL	BOOT_PU_EXT_MODE	Word[Signed]		D222	%MW0.222	Boot to 1:EXT or 2:PU mode	P.1166=2
 VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1195=22 [counts]
 VAR_GLOBAL	SAVED_MOTOR_ENABLE	Word[Signed]		D253	%MW0.253	Saved motor run state M9	P.1197=0
@@ -183,6 +185,7 @@ Inductive sensor XEPRO IPS12-S4NO50-A2P DC 10-30V NPN/open collector,
 normally open contact.
 When object is approached, sensor makes contact between SIGNAL and GND.
 
+
 setup for first use
 -------------------
 
@@ -238,7 +241,7 @@ set parameters:
   P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
   P.1150  12000    D206 Number of cycles (initial countdown)
   P.1151  10       D207 measure time of N cycles
-  P.1152  0        D208 unused
+  P.1152  16       D208 regulation feedback 1-strong 1024-weak
   P.1153  6000  ms D209 PID setpoint time ideal for N cycles P.1151=10 6000ms 100rpm D208->D209
   P.1154  5715  ms D210 MIN allowed cycle time for P.1151=10 5715ms 105rpm too fast limit E. 16
   P.1155  6315  ms D211 MAX allowed cycle time for P.1151=10 6315ms  95rpm too slow limit E. 17
@@ -255,6 +258,7 @@ set parameters:
   P.1166  2        D222 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
   P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
   P.1197  0        D253 auto-saved M9 motor on/off state
+
 
 for PID control set this:
 
@@ -457,7 +461,7 @@ IF SAMPLE_PULSE THEN
 		IF TOO_FAST_COUNTS>MAX_TOO_FAST_COUNTS THEN
 			USER_ERROR:=16;
 		END_IF;
-		CTRL_PULSE_WIDTH:=(MIN_CYCLE_TIME-MEASURED_CYCLE_TIME)/16;
+		CTRL_PULSE_WIDTH:=(MIN_CYCLE_TIME-MEASURED_CYCLE_TIME)/CTRL_PULSE_FEEDBACK;
 	END_IF;
 	IF MEASURED_CYCLE_TIME>MAX_CYCLE_TIME THEN
 		TOO_SLOW_COUNTS:=TOO_SLOW_COUNTS+1;
@@ -465,7 +469,7 @@ IF SAMPLE_PULSE THEN
 		IF TOO_SLOW_COUNTS>MAX_TOO_SLOW_COUNTS THEN
 			USER_ERROR:=17;
 		END_IF;
-		CTRL_PULSE_WIDTH:=(MEASURED_CYCLE_TIME-MAX_CYCLE_TIME)/16;
+		CTRL_PULSE_WIDTH:=(MEASURED_CYCLE_TIME-MAX_CYCLE_TIME)/CTRL_PULSE_FEEDBACK;
 	END_IF;
 	IF DIAL_PUSH_MODE=0 THEN
 		DISPLAY_DIAL_PUSH:=MEASURED_CYCLE_TIME;
@@ -475,16 +479,3 @@ END_IF;
 OUT_T(NOT(SAMPLE_PULSE), CTRL_PULSE, CTRL_PULSE_WIDTH);
 RUN_FASTER:=MEASURED_CYCLE_TIME>MAX_CYCLE_TIME AND NOT(CTRL_PULSE);
 RUN_SLOWER:=MEASURED_CYCLE_TIME<MIN_CYCLE_TIME AND NOT(CTRL_PULSE);
-
-(*
-debug convenience:
-5s timer to generate user error, when E.16 is displayed then
-press STOP/RESET or re-upload code to reset PLC and
-re-execute this code from init
-*)
-(*
-OUT_T(TRUE, TS15, 600);
-IF TS15 THEN
-	USER_ERROR:=16;
-END_IF;
-*)
