@@ -141,7 +141,7 @@ set parameters:
   P.79    6        PU start, PU frequency set, LED PU should turn ON
   P.82    0.00  A  motor excitation current
   P.127  48.00  Hz PID start with linear accelerate to this freq, then switch to PID control
-  P.128   0        0:No PID (default), 1010:PID (optional)
+  P.128   0        0:No PID, 1010:PID (default) P.79=3 can use PID when enabled here, P.79=6 no PID, slower/faster control
   P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
   P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
   P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
@@ -190,6 +190,9 @@ for PID control set this:
 
   P.127   48.00 Hz PID start with linear accelerate to this freq, then switch to PID control
   P.128   1010     PID reverse action
+  P.129   100.0  % PID proportional band -> 100 %
+  P.130   60.0   s PID integral time -> 5 s
+  P.134   9999   s PID differential time (9999 disabled differential)
   P.1151  10       measure time of 1 cycle (each cycle), D207 in PLC
   P.1153  6000  ms PID setpoint P.1151=1 cycle time          600ms 100rpm ideal
   P.1154  5715  ms MIN allowed  P.1151=1 cycle time PLC D210 571ms 105rpm too fast limit

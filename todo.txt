@@ -1,3 +1,5 @@
 [ ] control pulse sensitivity parametrize 1/16 constant
 [ ] when START is pressed when motor runs, rotation time
     measurement is reset (it shouldn't reset)
+[ ] P.79=3 starts only by double-push start BTN
+    should start by single push start BTN
