@@ -1,4 +1,4 @@
-(* e800-inverter-counter-v77 *)
+(* e800-inverter-counter-v78 *)
 (* comments take up program space *)
 (*
 Connect mini usb cable
@@ -218,6 +218,7 @@ set parameters:
   P.128   0        0:No PID (default), 1010:PID (optional)
   P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
   P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
+  P.192   9999     ABC relay no function (free for PLC)
   P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
   P.261   1        on power failure, decelerate to stop
   P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
@@ -236,8 +237,8 @@ set parameters:
   P.816   9999     torq limit acceleration
   P.817   9999     torq limit deceleration
   P.874   400 %    overload shutdown torq OLT limit maximum
-  P.888   76       free parameter, parameters version
-  P.889   76       free parameter, program version
+  P.888   78       free parameter, parameters version
+  P.889   78       free parameter, program version
   P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
   P.1150  12000    D206 Number of cycles (initial countdown)
   P.1151  10       D207 measure time of N cycles

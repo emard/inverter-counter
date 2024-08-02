@@ -119,9 +119,20 @@ reset all parameters (but PLC program will stay)
 MODE -> Turn dial anticlockwise -> ALLC -> SET -> 0 
 -> rotate change to 1 -> SET -> 1 should blink
 
+when uploading program fails with error PLC response 4406
+PLC memory should be cleared with P.414=0 P.498=9696
+
+clear
+-----
+  ALLC    1        resets most parameters to factory default
+  P.414   0        turn PLC OFF
+  P.498   9696     PLC flash memory clean (when PLC OFF P.414=0)
+                   read P.498 after 9696 to check:
+                   P.498=0 successful clear
+                   P.498=1 not cleared
+
 set parameters:
 --------------
-  ALLC    1        resets most parameters to factory default
   P.0     4.0   %  torque boost (required to start)
   P.1    50.00  Hz max freq
   P.2    48.00  Hz min freq this is default running freq
@@ -141,9 +152,10 @@ set parameters:
   P.79    6        PU start, PU frequency set, LED PU should turn ON
   P.82    0.00  A  motor excitation current
   P.127  48.00  Hz PID start with linear accelerate to this freq, then switch to PID control
-  P.128   0        0:No PID, 1010:PID (default) P.79=3 can use PID when enabled here, P.79=6 no PID, slower/faster control
+  P.128   0        0:No PID (default), 1010:PID (optional)
   P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
   P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
+  P.192   9999     ABC relay no function (free to be used by PLC)
   P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
   P.261   1        on power failure, decelerate to stop
   P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
@@ -190,9 +202,6 @@ for PID control set this:
 
   P.127   48.00 Hz PID start with linear accelerate to this freq, then switch to PID control
   P.128   1010     PID reverse action
-  P.129   100.0  % PID proportional band -> 100 %
-  P.130   60.0   s PID integral time -> 5 s
-  P.134   9999   s PID differential time (9999 disabled differential)
   P.1151  10       measure time of 1 cycle (each cycle), D207 in PLC
   P.1153  6000  ms PID setpoint P.1151=1 cycle time          600ms 100rpm ideal
   P.1154  5715  ms MIN allowed  P.1151=1 cycle time PLC D210 571ms 105rpm too fast limit
