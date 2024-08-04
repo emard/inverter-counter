@@ -1,0 +1,73 @@
+─┌┬┐
+│├┼┤
+─└┴┘
+
+Female connector
+looking at pins
+
+   ┌─┬───────── RS485+
+   │ │
+┌───  ───┐
+│12345678│
+└────────┘
+ └──│─│┴─────── SG
+    └─┴──────── RS485-
+
+Pinout is described in
+'Mitsubishi E800 Manual - Comms.pdf'
+page 158 chapter 3.3 Wiring of PU connector
+
+
+Wiring for half duplex
+----------------------
+RJ45                   DB9
+1 orange-white         5 SG
+2 orange               (do not connect)
+3 green-white   RS485+ 2 TXRX+
+4 blue          RS485- 1 TXRX-
+5 blue-white    RS485+ 2 TXRX+
+6 green         RS485- 1 TXRX-
+7 brown-white          5 SG
+8 brown                (do not connect)
+
+
+Wiring for full duplex
+----------------------
+RJ45                                  DB9               ATEN 4-pin
+1 orange-white  SG signal ground      SG     5          0 GND
+2 orange        PU power supply       (do not connect)
+3 green-white   RDA                   RS485+ 2 TX+      1 T+
+4 blue          SDB                   RS485- 6 RX-      3 R-
+5 blue-white    SDA                   RS485+ 7 RX+      4 R+
+6 green         RDB                   RS485- 1 TX-      2 T-
+7 brown-white   SG signal ground      SG     5          0 GND
+8 brown         PU power supply       (do not connect)
+
+-------------------------------
+note:
+
+half-duplex cable works for setting parameters but
+Developer won't connect. Full duplex cable connects
+from developer but uploading PLC program doesn't work.
+Downloading PLC program sometimes works
+
+[ ] Some full duplex RS-485 adapters (untested)
+    DSD TECH SH-U16A USB-RS485 RS422 Adapter (with PL2303 Chip) 
+    DINV-U4 Diatrend Corp.
+    BMJ-8-28N HACHIKO ELECTRIC CO., LTD.
+    DMDH-3PN or DMDH-10PN Diatrend Corp.
+    'Mitsubishi E800 Manual - Comms.pdf'
+    page 156 chapter 3 RS-485 communicaiton
+    
+[ ] try non-default settings for serial P.119-122
+    MITSUBISHI_FR-A800-PLC-FUNCTION-PROGRAMMING-MANUAL.pdf
+    page 15 chapter 1.7.4
+
+ATEN IC-485AI full duplex adapter
+
+Pinout is in manual on page 14 or 17
+
+1 T+
+2 T-
+3 R-
+4 R+
