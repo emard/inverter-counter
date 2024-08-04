@@ -106,13 +106,12 @@ def run():
   # p = packet_write_reg(0, 40014, 6000)
 
   rs485 = serial.Serial(
-    # port='/dev/ttyUSB.RS485',
-    port='/dev/ttyUSB0',
-    baudrate=19200,
+    port=port,
+    baudrate=baud,
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_EVEN,
     stopbits=serial.STOPBITS_TWO,
-    timeout=0.5)
+    timeout=timeout)
 
   print("writing regs")
 
@@ -153,12 +152,14 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-p", "--port")               # serial port /dev/ttyUSB0 default
 parser.add_argument("-b", "--baud")               # [bps] 19200
 # parser.add_argument('-s', '--bits-parity-stop') # 8E2 8N1 7N2 etc serial line signaling
+parser.add_argument("-t", "--timeout")            # [s] 0.5
 parser.add_argument("reg")                        # positional argument
 
 args = parser.parse_args()
 print(
   args.port,
   args.baud,
+  args.timeout,
   args.reg,
 )
 
@@ -170,9 +171,15 @@ baud = 19200
 if args.baud != None:
   baud = args.baud
 
+timeout = 0.5
+if args.timeout != None:
+  timeout = float(args.timeout)
+
+
 print(
   port,
   baud,
+  timeout,
   args.reg
 )
 
