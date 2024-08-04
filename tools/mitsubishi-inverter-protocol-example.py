@@ -59,7 +59,7 @@ def run():
 
     print_hex(request)
     rs485.write(request)
-    response = rs485.read(5)
+    response = rs485.read(4)
     print_hex(response)
 
 run()
