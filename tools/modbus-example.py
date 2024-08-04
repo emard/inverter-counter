@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os, serial, time
 
+# Mitsubishi E800 MODBUS protocol example
+
 # P.117 = 17   # device address
 # P.118 = 192  # 19200 baud
 # P.119 = 1    # 2 stop bits
