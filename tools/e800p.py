@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, serial, time, argparse
+import serial, argparse
 
 # Mitsubishi E800 MODBUS protocol example
 
