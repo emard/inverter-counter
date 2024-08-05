@@ -92,34 +92,59 @@ def print_hex(p):
 
 def run():
 
+  regstr = args.reg.split("=")
+  reg = int(regstr[0])
+  val = []
+  if len(regstr) == 2:
+    valstr = regstr[1].split(",")
+    val = [int(i) for i in valstr]
+  if args.verbose != None:
+    print("P.", reg, "=", val)
+
     # page 176
     # write single register
     # p = packet_write_reg(0x05, 40014, 6000)
 
-  print("for this request:")
-  print("11 03 03 EB 00 03 77 2B")
-  print("expected response is:")
-  print("11 03 06 17 70 0B B8 03 E8 2C E6")
-  print("")
+  if args.verbose:
+    print("for this request:")
+    print("11 03 03 EB 00 03 77 2B")
+    print("expected response is:")
+    print("11 03 06 17 70 0B B8 03 E8 2C E6")
+    print("")
 
   # p = packet_read_regs(0, 41004, 3)
   # p = packet_write_reg(0, 40014, 6000)
 
+  if args.verbose != None:
+    print(port, baud, bytesize, parity, stopbits, timeout)
   rs485 = serial.Serial(
     port=port,
     baudrate=baud,
-    bytesize=serial.EIGHTBITS,
-    parity=serial.PARITY_EVEN,
-    stopbits=serial.STOPBITS_TWO,
+    bytesize=bytesize,
+    parity=parity,
+    stopbits=stopbits,
     timeout=timeout)
 
-  print("writing regs")
-
-  request = packet_write_regs(17,41004,(6000,3000,1000))
-  print_hex(request)
-  rs485.write(request)
-  response = rs485.read(8)
-  print_hex(response)
+  if(len(val)):
+    request = packet_write_regs(device,41000+reg, val)
+    if args.verbose != None:
+      print("writing regs")
+      print_hex(request)
+    rs485.write(request)
+    response = rs485.read(8)
+    if args.verbose != None:
+      print_hex(response)
+  else:
+    request = packet_read_regs(device, 41000+reg, number)
+    if args.verbose != None:
+      print("reading regs")
+      print_hex(request)
+    rs485.write(request)
+    response = rs485.read(5+2*number)
+    if args.verbose != None:
+      print_hex(response)
+    for i in range(number):
+      print("P.%d=%d" % (i+reg,response[3+2*i]*256+response[4+2*i]))
 
   #rs485.write(packet_write_reg(17,41004,6000))
   #response = rs485.read(8)
@@ -131,18 +156,6 @@ def run():
   #response = rs485.read(8)
   #print_hex(response)
   
-  print("reading regs")
-
-  # https://www.lcautomation.com/wb_documents/Mitsubishi/Mitsubishi%20E800%20Manual%20-%20Comms.pdf
-  # page 175
-  # Example) Read the register values of 41004 (Pr.4) to 41006 (Pr.6) from slave address 17 (H11).
-  request = packet_read_regs(17, 41004, 3)
-  print_hex(request)
-  rs485.write(request)
-  response = rs485.read(11)
-  print_hex(response)
-
-
 # main
 parser = argparse.ArgumentParser(
        prog="E800 MODBUS Parameters",
@@ -151,17 +164,14 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("-p", "--port")               # serial port /dev/ttyUSB0 default
 parser.add_argument("-b", "--baud")               # [bps] 19200
-# parser.add_argument('-s', '--bits-parity-stop') # 8E2 8N1 7N2 etc serial line signaling
+parser.add_argument('-c', '--comm')               # 8E2 8N1 7N2 etc serial line signaling
 parser.add_argument("-t", "--timeout")            # [s] 0.5
+parser.add_argument('-d', '--device')             # 1-31
+parser.add_argument('-n', '--number')             # 1-125 number of registers to read
+parser.add_argument('-v', '--verbose')            # print protocol in hex
 parser.add_argument("reg")                        # positional argument
 
 args = parser.parse_args()
-print(
-  args.port,
-  args.baud,
-  args.timeout,
-  args.reg,
-)
 
 port = "/dev/ttyUSB0"
 if args.port != None:
@@ -171,16 +181,39 @@ baud = 19200
 if args.baud != None:
   baud = args.baud
 
+bytesize = serial.EIGHTBITS
+parity   = serial.PARITY_EVEN
+stopbits = serial.STOPBITS_TWO
+if args.comm != None:
+  comm = args.comm.replace(",","").upper()
+  if comm[0] == "8":
+    bytesize = serial.EIGHTBITS
+  if comm[0] == "7":
+    bytesize = serial.SEVENBITS
+  if comm[1] == "N":
+    parity = serial.PARITY_NONE
+  if comm[1] == "E":
+    parity = serial.PARITY_EVEN
+  if comm[1] == "O":
+    parity = serial.PARITY_ODD
+  if comm[2] == "1":
+    stopbits = serial.STOPBITS_ONE
+  if comm[2] == "2":
+    stopbits = serial.STOPBITS_TWO
+
 timeout = 0.5
 if args.timeout != None:
   timeout = float(args.timeout)
 
+device = 0
+if args.device != None:
+  device = int(args.device)
 
-print(
-  port,
-  baud,
-  timeout,
-  args.reg
-)
+number = 1
+if args.number != None:
+  number = int(args.number)
+
+if args.verbose != None:
+  print(args)
 
 run()
