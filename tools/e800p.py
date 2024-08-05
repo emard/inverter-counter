@@ -13,6 +13,17 @@ import serial, argparse
 # TO APPLY PARAMETERS
 # TURN INVERTER OFF/ON
 
+# usage
+
+# read parameters
+# ./e800p.py -d17 4 -n3
+# P.4=6000
+# P.5=3000
+# P.6=1000
+
+# write parameters
+# ./e800p.py -d17 4=6000,3000,1000
+
 starting_reg = 40001
 
 # P.4 is 41004
@@ -167,7 +178,7 @@ parser.add_argument("-b", "--baud")               # [bps] 19200
 parser.add_argument('-c', '--comm')               # 8E2 8N1 7N2 etc serial line signaling
 parser.add_argument("-t", "--timeout")            # [s] 0.5
 parser.add_argument('-d', '--device')             # 1-31
-parser.add_argument('-n', '--number')             # 1-125 number of registers to read
+parser.add_argument('-n', '--number')             # 1-30 number of registers to read
 parser.add_argument('-v', '--verbose')            # print protocol in hex
 parser.add_argument("reg")                        # positional argument
 
