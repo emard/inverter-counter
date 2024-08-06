@@ -101,10 +101,15 @@ def packet_write_regs(addr, reg, values):
 def print_hex(p):
   print(' '.join(format(x, '02X') for x in p))
 
+
 def run():
 
   regstr = args.reg.split("=")
   reg = int(regstr[0])
+  if reg < 1000:
+    regmodbus = reg + 41000
+  else:
+    regmodbus = reg + 44000
   val = []
   if len(regstr) == 2:
     valstr = regstr[1].split(",")
@@ -137,7 +142,7 @@ def run():
     timeout=timeout)
 
   if(len(val)):
-    request = packet_write_regs(device,41000+reg, val)
+    request = packet_write_regs(device, regmodbus, val)
     if args.verbose != None:
       print("writing regs")
       print_hex(request)
@@ -146,7 +151,7 @@ def run():
     if args.verbose != None:
       print_hex(response)
   else:
-    request = packet_read_regs(device, 41000+reg, number)
+    request = packet_read_regs(device, regmodbus, number)
     if args.verbose != None:
       print("reading regs")
       print_hex(request)
