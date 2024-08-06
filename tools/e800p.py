@@ -124,7 +124,7 @@ def decode_write_response(reg, response):
             else:
               print("unknown response length %d bytes", len(response))
 
-def decode_read_response(reg, response):
+def decode_read_response(reg, number, response):
     if args.verbose != None:
       print_hex(response)
     if len(response) == 0:
@@ -142,13 +142,15 @@ def decode_read_response(reg, response):
           else:
             print("P.%d doesn't exist" % (reg,))
 
+def regmodbus(reg):
+  if reg < 1000:
+    return reg + 41000
+  else:
+    return reg + 44000
+
 def run():
   regstr = args.reg.split("=")
   reg = int(regstr[0])
-  if reg < 1000:
-    regmodbus = reg + 41000
-  else:
-    regmodbus = reg + 44000
   val = []
   if len(regstr) == 2:
     valstr = regstr[1].split(",")
@@ -181,7 +183,8 @@ def run():
     timeout=timeout)
 
   if(len(val)):
-    request = packet_write_regs(device, regmodbus, val)
+    # max write 150 regs in one request
+    request = packet_write_regs(device, regmodbus(reg+i), val)
     if args.verbose != None:
       print("writing regs")
       print_hex(request)
@@ -189,13 +192,22 @@ def run():
     response = rs485.read(8)
     decode_write_response(reg, response)
   else:
-    request = packet_read_regs(device, regmodbus, number)
-    if args.verbose != None:
-      print("reading regs")
-      print_hex(request)
-    rs485.write(request)
-    response = rs485.read(5+2*number)
-    decode_read_response(reg, response)
+    i = 0
+    while i < number:
+      request_read_n = number-i
+      if request_read_n > 30:
+        request_read_n = 30
+
+      request = packet_read_regs(device, regmodbus(reg+i), request_read_n)
+      if args.verbose != None:
+        print("reading %d regs" % request_read_n)
+        print_hex(request)
+      rs485.write(request)
+      response = rs485.read(5+2*request_read_n)
+      decode_read_response(reg+i, request_read_n, response)
+
+      i += request_read_n
+
 
   # single register writing
   #rs485.write(packet_write_reg(17,41004,6000))
@@ -253,7 +265,7 @@ if args.comm != None:
   if comm[2] == "2":
     stopbits = serial.STOPBITS_TWO
 
-timeout = 0.5
+timeout = 1
 if args.timeout != None:
   timeout = float(args.timeout)
 
