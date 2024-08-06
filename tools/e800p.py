@@ -100,10 +100,49 @@ def packet_write_regs(addr, reg, values):
   
 def print_hex(p):
   print(' '.join(format(x, '02X') for x in p))
+  
+def decode_write_response(reg, response):
+    if args.verbose != None:
+      print_hex(response)
+    if len(response) == 0:
+      print("no response")
+    else:
+      if crc16(response[:-2]) != response[-2] + 256*response[-1]:
+        print("bad crc")
+      else:
+        if len(response) < 5:
+          print("response too short < 5 bytes")
+        else:
+          if len(response) == 5:
+            print("P.%d doesn't exist" % (reg,))
+          else:
+            if len(response) == 8:
+              if response[1] == 0x10:
+                print("written %d parameters" % (response[4]*256+response[5]))
+              else:
+                print("unknown response or P.%d doesn't exist", (reg,))
+            else:
+              print("unknown response length %d bytes", len(response))
 
+def decode_read_response(reg, response):
+    if args.verbose != None:
+      print_hex(response)
+    if len(response) == 0:
+      print("no response")
+    else:
+      if crc16(response[:-2]) != response[-2] + 256*response[-1]:
+        print("bad crc")
+      else:
+        if len(response) < 5:
+          print("response too short < 5 bytes")
+        else:
+          if response[1] == 0x03:
+            for i in range(number):
+              print("P.%d=%d" % (i+reg,response[3+2*i]*256+response[4+2*i]))
+          else:
+            print("P.%d doesn't exist" % (reg,))
 
 def run():
-
   regstr = args.reg.split("=")
   reg = int(regstr[0])
   if reg < 1000:
@@ -148,8 +187,7 @@ def run():
       print_hex(request)
     rs485.write(request)
     response = rs485.read(8)
-    if args.verbose != None:
-      print_hex(response)
+    decode_write_response(reg, response)
   else:
     request = packet_read_regs(device, regmodbus, number)
     if args.verbose != None:
@@ -157,11 +195,9 @@ def run():
       print_hex(request)
     rs485.write(request)
     response = rs485.read(5+2*number)
-    if args.verbose != None:
-      print_hex(response)
-    for i in range(number):
-      print("P.%d=%d" % (i+reg,response[3+2*i]*256+response[4+2*i]))
+    decode_read_response(reg, response)
 
+  # single register writing
   #rs485.write(packet_write_reg(17,41004,6000))
   #response = rs485.read(8)
   #print_hex(response)
