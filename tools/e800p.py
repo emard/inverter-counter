@@ -48,6 +48,39 @@ def crc16(data):
                 crc = ((crc >> 1) & 0xFFFF)
   return crc
 
+def suggest_comm_parameters():
+  # epilog="P.117=17 P.118=192 P.119=1 P.120=2 P.122=0 P.549=1")
+  print("RS485 female RJ45 looking at pins")
+  print("   ┌─────────── 3 RX+ green-white")
+  print("   │ ┌───────── 5 TX+ blue-white")
+  print("┌───  ───┐")
+  print("│12345678│")
+  print("└────────┘")
+  print(" └──│─│┴─────── 1,7 GND orange-white, brown-white")
+  print("    │ └──────── 6 RX- green")
+  print("    └────────── 4 TX- blue")
+  print("full-duplex as shown above")
+  print("half-duplex TXRX+ = TX+RX+ TXRX- = TX-RX-")
+  print("suggested inverter MODBUS comm parameters")
+  print("press MODE, turn dial to select parameter")
+  print("press SET, turn dial to change value")
+  print("press SET to apply or MODE to cancel")
+  print("P.117=%d (MODBUS device address)" % (device,))
+  print("P.118=%d (baudrate %d)" % (baud//100, baud,))
+  par_stopbits = int(stopbits)-1
+  par_parity = 0
+  if parity == serial.PARITY_ODD:
+    par_parity = 1
+    par_stopbits = 0
+  if parity == serial.PARITY_EVEN:
+    par_parity = 2
+    par_stopbits = 0
+  print("P.119=%d (%d stop bits)" % (par_stopbits, par_stopbits+1,))
+  print("P.120=%d (%s parity)" % (par_parity,parity,))
+  print("P.122=0 (PU communication check disabled)")
+  print("P.549=1 (MODBUS protocol)")
+  print("to apply settings, power inverter OFF/ON")
+
 # read multiple (n) regs starting from reg
 def packet_read_regs(addr, reg, n):
   r = reg-starting_reg
@@ -106,6 +139,8 @@ def decode_write_response(reg, response):
       print_hex(response)
     if len(response) == 0:
       print("no response")
+      if args.verbose:
+        suggest_comm_parameters()
     else:
       if crc16(response[:-2]) != response[-2] + 256*response[-1]:
         print("bad crc")
@@ -129,6 +164,8 @@ def decode_read_response(reg, number, response):
       print_hex(response)
     if len(response) == 0:
       print("no response")
+      if args.verbose:
+        suggest_comm_parameters()
     else:
       if crc16(response[:-2]) != response[-2] + 256*response[-1]:
         print("bad crc")
@@ -184,7 +221,7 @@ def run():
 
   if(len(val)):
     # max write 150 regs in one request
-    request = packet_write_regs(device, regmodbus(reg+i), val)
+    request = packet_write_regs(device, regmodbus(reg), val)
     if args.verbose != None:
       print("writing regs")
       print_hex(request)
@@ -222,9 +259,9 @@ def run():
   
 # main
 parser = argparse.ArgumentParser(
-       prog="E800 MODBUS Parameters",
+       prog="Mitsubishi E800 MODBUS Parameters",
        description="RS485 half or full duplex",
-       epilog="P.117=17 P.118=192 P.119=1 P.120=2 P.122=0 P.549=1")
+       epilog="EMARD")
 
 parser.add_argument("-p", "--port")               # serial port /dev/ttyUSB0 default
 parser.add_argument("-b", "--baud")               # [bps] 19200
@@ -243,7 +280,7 @@ if args.port != None:
 
 baud = 19200
 if args.baud != None:
-  baud = args.baud
+  baud = int(args.baud)
 
 bytesize = serial.EIGHTBITS
 parity   = serial.PARITY_EVEN

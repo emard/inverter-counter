@@ -2,8 +2,7 @@
 │├┼┤
 ─└┴┘
 
-Female connector
-looking at pins
+Female RJ45 looking at pins
 
    ┌─┬───────── RS485+
    │ │
@@ -30,6 +29,18 @@ RJ45                   DB9
 7 brown-white          5 SG
 8 brown                (do not connect)
 
+
+RS485 Female RJ45 looking at pins
+
+   ┌─────────── 3 RX+ green-white
+   │ ┌───────── 5 TX+ blue-white
+┌───  ───┐
+│        │
+│12345678│
+└────────┘
+ └──│─│┴─────── 1,7 GND orange-white, brown-white
+    │ └──────── 6 RX- green
+    └────────── 4 TX- blue
 
 Wiring for full duplex
 ----------------------
