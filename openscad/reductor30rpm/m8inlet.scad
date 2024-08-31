@@ -1,7 +1,7 @@
 // inlet into reductor hole
 // with anti-slip notch
 
-od = 17.3;
+od = 17.6;
 
 od2 = 27; // spacer touch reductor hole
 h2  = 10; // height spacer
