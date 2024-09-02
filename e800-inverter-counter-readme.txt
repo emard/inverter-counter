@@ -192,8 +192,9 @@ set parameters:
   P.1162  0        D218 dial push shows 0:N cycle time, 1:too fast/slow error count
   P.1163  1      s D219 *0.1 start button delay time (debounce)
   P.1164  1        D220 after power failure 0:stop and counter reset, 1:continue
-  P.1165  9000  s  D221 max run time (D216->D221)
-  P.1166  2        D222 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1165  2        D221 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1166  9000     D222 max run time
+  P.1167  10     s D223 *0.1 ticks for one time unit (10:second, 600:minute)
   P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
   P.1197  0        D253 auto-saved M9 motor on/off state
 
