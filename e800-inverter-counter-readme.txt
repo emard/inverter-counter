@@ -1,4 +1,4 @@
-Inverter Counter Readme v33
+Inverter Counter Readme v79
 
 For Inverter MITSUBISHI
 E820S-0030(0.4K)-4
