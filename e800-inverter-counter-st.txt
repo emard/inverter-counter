@@ -1,4 +1,4 @@
-(* e800-inverter-counter-v78 *)
+(* e800-inverter-counter-v79 *)
 (* comments take up program space *)
 (*
 Connect mini usb cable
@@ -42,7 +42,7 @@ VAR_GLOBAL_CONSTANT	DIAL_PUSH_MS	Word[Signed]	H3000			0 format while dial is pus
 VAR_GLOBAL_CONSTANT	EXT_MODE	Word[Signed]	1			EXT mode For SD1140 and SD1143	
 VAR_GLOBAL_CONSTANT	DIAL_PUSH_FF_SS	Word[Signed]	H3200			FF.SS format While Dial is pushed too fast/slow count FF.SS blinks	
 VAR_GLOBAL_CONSTANT	PU_MODE	Word[Signed]	2			PU mode For SD1140 and SD1143	
-VAR_GLOBAL	PU_EXT_CHANGE_COUNT	Word[Signed]		C6	%MW4.6	counts every change of PU/EXT mode	
+VAR_GLOBAL	PU_EXT_CHANGE_COUNT	Word[Signed]		CN6	%MW4.6	counts every change of PU/EXT mode	
 VAR_GLOBAL	CURRENT_CYCLE_TIMESTAMP	Word[Signed]		D0	%MW0.0		
 VAR_GLOBAL	LAST_CYCLE_TIMESTAMP	Word[Signed]		D1	%MW0.1		
 VAR_GLOBAL	MEASURED_CYCLE_TIME	Word[Signed]		D2	%MW0.2		
@@ -50,6 +50,7 @@ VAR_GLOBAL	LAST_PU_EXT_MODE	Word[Signed]		D6	%MW0.6	pu/ext state from previous c
 VAR_GLOBAL	SAMPLING_COUNTER	Word[Signed]		D10	%MW0.10	Counts every P.1151 cycles to trigger measure cycle time	
 VAR_GLOBAL	TOO_FAST_COUNTS	Word[Signed]		D11	%MW0.11	Counts too fast cycles	
 VAR_GLOBAL	TOO_SLOW_COUNTS	Word[Signed]		D12	%MW0.12	Counts too slow cycles	
+VAR_GLOBAL	REMAINING_COUNTS	Word[Signed]		D14	%MW0.14	how many counts still	
 VAR_GLOBAL	CTRL_PULSE_WIDTH	Word[Signed]		D15	%MW0.15	*0.1s pulse for slower/faster	
 VAR_GLOBAL	INIT_COUNTS	Word[Signed]		D206	%MW0.206	Initial starting counts	P.1150=22 [counts]
 VAR_GLOBAL	SAMPLE_CYCLES	Word[Signed]		D207	%MW0.207	measure cycle time every N revolutions	P.1151=10 [counts]
@@ -66,8 +67,9 @@ VAR_GLOBAL	INCREASE_STEP	Word[Signed]		D217	%MW0.217	number of counts to increas
 VAR_GLOBAL	DIAL_PUSH_MODE	Word[Signed]		D218	%MW0.218	1-FF.SS too fast/slow 0-cycle time [ms]	P.1162=1 [counts.counts]
 VAR_GLOBAL	START_DELAY	Word[Signed]		D219	%MW0.219	For start button debounce usually 1 for 0.1s delay	P.1163=1 [s/10]
 VAR_GLOBAL	RESTART_AT_POWER_ON	Word[Signed]		D220	%MW0.220	power on restart 1-enabled 0-disabled	P.1164=1
-VAR_GLOBAL	MAX_RUN_TIME	Word[Signed]		D221	%MW0.221	max run time [s]	P.1165=9000
-VAR_GLOBAL	BOOT_PU_EXT_MODE	Word[Signed]		D222	%MW0.222	Boot to 1:EXT or 2:PU mode	P.1166=2
+VAR_GLOBAL	BOOT_PU_EXT_MODE	Word[Signed]		D221	%MW0.221	Boot to 1:EXT or 2:PU mode	P.1165=2
+VAR_GLOBAL	MAX_RUN_TIME	Word[Signed]		D222	%MW0.222	max run time [s]	P.1166=9000
+VAR_GLOBAL	RUN_TIME_TICKS	Word[Signed]		D223	%MW0.223	How many ticks for 1 unit run time	P.1167=10 [s/10]
 VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1195=22 [counts]
 VAR_GLOBAL	SAVED_MOTOR_ENABLE	Word[Signed]		D253	%MW0.253	Saved motor run state M9	P.1197=0
 VAR_GLOBAL	RUN_ROTATION_PULSE	Bit		M3	%MX0.3	when motor is running pulse from sensor	
@@ -112,7 +114,7 @@ VAR_GLOBAL	RUN_MAIN_SPEED	Bit		SM1204	%MX10.1204	internal RL
 VAR_GLOBAL	IS_MOTOR_RUNNING	Bit		SM1216	%MX10.1216	True when motor is running	
 VAR_GLOBAL	PLC_MOTOR_USE_SOFT_REG_CTRL	Bit		SM1255	%MX10.1255	SM1255=FALSE to run motor with SM1200 and ignore SD1148	
 VAR_GLOBAL	START_DELAYED	Bit		TS0	%MX3.0	Timer T0 provides delayed/debounced START button signal	
-VAR_GLOBAL	RUN_1S_PULSE	Bit		TS1	%MX3.1	Timer T1 every 1s when motor runs	
+VAR_GLOBAL	RUN_TIME_PULSE	Bit		TS1	%MX3.1	Timer T1 every 1s when motor runs	
 VAR_GLOBAL	SW_STOP_HOLDING	Bit		TS2	%MX3.2	Timer T2 becomes true after 1s of holding SW_STOP button	
 VAR_GLOBAL	RUN_WITHOUT_SENSOR	Bit		TS3	%MX3.3	Timer T3 triggers when motor runs but sensor is not working	
 VAR_GLOBAL	POWER_ON_DELAYED	Bit		TS5	%MX3.5	Timer T5 Becomes true 0.1s after power on	
@@ -255,8 +257,9 @@ set parameters:
   P.1162  0        D218 dial push shows 0:N cycle time, 1:too fast/slow error count
   P.1163  1      s D219 *0.1 start button delay time (debounce)
   P.1164  1        D220 after power failure 0:stop and counter reset, 1:continue
-  P.1165  9000  s  D221 max run time
-  P.1166  2        D222 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1165  2        D221 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
+  P.1166  9000     D222 max run time
+  P.1167  10       D223 run time ticks [*0.1s]
   P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
   P.1197  0        D253 auto-saved M9 motor on/off state
 
@@ -305,21 +308,29 @@ IF POWER_ON_PULSE THEN
 	PLC_MOTOR_SOFT_REG_CTRL:=0;
 	PLC_PID_CTRL:=1;
 	PLC_MOTOR_USE_SOFT_REG_CTRL:=FALSE;
-	IF SAVED_COUNTS>STOP_COUNTS THEN
+	REMAINING_COUNTS:=SAVED_COUNTS-STOP_COUNTS;
+	STILL_COUNTING_DOWN:=REMAINING_COUNTS>0 OR REMAINING_COUNTS<-30;
+	IF STILL_COUNTING_DOWN THEN
 		DISPLAY_COUNTS:=SAVED_COUNTS;
 		IF SAVED_MOTOR_ENABLE>0 THEN
 			MOTOR_ENABLE:=TRUE;
 		END_IF;
 	END_IF;
-	INIT_RESET_COUNTS:=SAVED_COUNTS<=STOP_COUNTS OR RESTART_AT_POWER_ON=0;
+	INIT_RESET_COUNTS:=NOT(STILL_COUNTING_DOWN) OR RESTART_AT_POWER_ON=0;
 	IF INIT_RESET_COUNTS THEN
 		DISPLAY_COUNTS:=INIT_COUNTS;
 		SAVED_MOTOR_ENABLE:=0;
 		MOTOR_ENABLE:=FALSE;
 	END_IF;
+	IF DIAL_PUSH_MODE=0 THEN
+		DISPLAY_FORMAT:=DIAL_PUSH_MS; (* [ms] *)
+	ELSE
+		DISPLAY_FORMAT:=DIAL_PUSH_FF_SS; (* FF.SS too fast/slow counts *)
+	END_IF;
 END_IF;
 
-STILL_COUNTING_DOWN:=DISPLAY_COUNTS>STOP_COUNTS;
+REMAINING_COUNTS:=DISPLAY_COUNTS-STOP_COUNTS;
+STILL_COUNTING_DOWN:=REMAINING_COUNTS>0 OR REMAINING_COUNTS<-30; (* max 65500 counts *)
 MOTOR_RUN:=MOTOR_ENABLE AND STILL_COUNTING_DOWN
 AND POWER_ON_DELAYED;
 OUT_T(SW_STOP, SW_STOP_HOLDING, 10); (* 1s timer  to detect holding STOP button *)
@@ -406,7 +417,7 @@ END_IF;
 
 (* press START  or change PU/EXT while running to increase counts *)
 INCREASE_WHILE_RUNNING:=(EXT_START_PULSE OR PU_EXT_CHANGE_PULSE) AND IS_MOTOR_RUNNING
-AND (DISPLAY_COUNTS<MAX_COUNTS_ALLOW_INCREASE);
+AND (MAX_COUNTS_ALLOW_INCREASE-DISPLAY_COUNTS>0);
 MOVP(INCREASE_WHILE_RUNNING, DISPLAY_COUNTS+INCREASE_STEP, DISPLAY_COUNTS);
 
 (* reset counter *)
@@ -421,9 +432,9 @@ IF COUNTS_RESET_PULSE THEN
 END_IF;
 
 (* how long is the motor running *)
-OUT_T(IS_MOTOR_RUNNING AND NOT(RUN_1S_PULSE), 
-RUN_1S_PULSE, 10); (* tick to count run time *)
-INCP(RUN_1S_PULSE, DISPLAY_RUN_TIME);
+OUT_T(IS_MOTOR_RUNNING AND NOT(RUN_TIME_PULSE),
+RUN_TIME_PULSE, RUN_TIME_TICKS); (* tick to count run time *)
+INCP(RUN_TIME_PULSE, DISPLAY_RUN_TIME);
 
 (* track rotation sensor *)
 PLS(SW_ROTATION, SW_ROTATION_PULSE);
