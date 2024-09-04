@@ -154,6 +154,7 @@ set parameters:
   P.127  48.00  Hz PID start with linear accelerate to this freq, then switch to PID control
   P.128   0        0:No PID (default), 1010:PID (optional)
   P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
+  P.161   1        PU mode accept frequency without SET button pressed
   P.183   50       MRS input = RUN PLC, LED P.RUN should turn ON now or after P.414
   P.192   9999     ABC relay no function (free to be used by PLC)
   P.251   0        disable output phase loss detection (allow connecting 1-phase motor)
