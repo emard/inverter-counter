@@ -22,10 +22,10 @@
 		<SystemComment/>
 		<Year>2024</Year>
 		<Month>9</Month>
-		<Day>3</Day>
-		<Hour>8</Hour>
-		<Minute>19</Minute>
-		<Second>1</Second>
+		<Day>5</Day>
+		<Hour>10</Hour>
+		<Minute>14</Minute>
+		<Second>29</Second>
 		<communication>
 			<pcPort>-1</pcPort>
 			<portNo>1</portNo>
@@ -71,9 +71,9 @@
 	<Option Slot="4">TA-4</Option>
 	<ParameterInformation>
 0,Torque boost,0 to 30,0.1%,6,6
-1,Maximum frequency,0 to 120,0.01Hz,120,60
-2,Minimum frequency,0 to 120,0.01Hz,0,20
-3,Base frequency,0 to 590,0.01Hz,50,50
+1,Maximum frequency,0 to 120,0.01Hz,120,30
+2,Minimum frequency,0 to 120,0.01Hz,0,25
+3,Base frequency,0 to 590,0.01Hz,50,40
 4,Multi-speed setting (high speed),0 to 590,0.01Hz,50,60
 5,Multi-speed setting (middle speed),0 to 590,0.01Hz,30,30
 6,Multi-speed setting (low speed),0 to 590,0.01Hz,10,10
@@ -83,12 +83,12 @@
 10,DC injection brake operation frequency,0 to 120,0.01Hz,3,3
 11,DC injection brake operation time,0 to 10;8888,0.1s,0.5,0.5
 12,DC injection brake operation voltage,0 to 30,0.1%,4,4
-13,Starting frequency,0 to 60,0.01Hz,0.5,19
+13,Starting frequency,0 to 60,0.01Hz,0.5,24
 14,Load pattern selection,0 to 3,1,0,0
 15,Jog frequency,0 to 590,0.01Hz,5,30
 16,Jog acceleration/deceleration time,0 to 3600,0.1s,0.5,0.5
 17,MRS/X10 terminal input selection,0 to 5,1,0,0
-18,High speed maximum frequency,0 to 590,0.01Hz,120,60
+18,High speed maximum frequency,0 to 590,0.01Hz,120,30
 19,Base frequency voltage,0 to 1000;8888;9999,0.1V,8888,8888
 20,Acceleration/deceleration reference frequency,1 to 590,0.01Hz,50,50
 21,Acceleration/deceleration time increments,0;1,1,0,0
@@ -192,7 +192,7 @@
 157,OL signal output timer,0 to 25;9999,0.1s,0,0
 158,AM terminal function selection,1 to 3;5 to 14;17;18;21;24;32;33;50;52 to 54;61;62;65;67;70;86;91;97,1,1,1
 160,User group read selection,0;1;9999,1,0,0
-161,Frequency setting/key lock operation selection,0;1;10;11,1,0,0
+161,Frequency setting/key lock operation selection,0;1;10;11,1,0,1
 162,Automatic restart after instantaneous power failure selection,0;1;10;11,1,0,0
 165,Stall prevention operation level for restart,0 to 400,0.1%,150,150
 166,Output current detection signal retention time,0 to 10;9999,0.1s,0.1,0.1
@@ -617,8 +617,8 @@
 883,Regeneration avoidance operation level,300 to 1200,0.1V,400,400
 885,Regeneration avoidance compensation frequency limit value,0 to 45;9999,0.01Hz,6,6
 886,Regeneration avoidance voltage gain,0 to 200,0.1%,100,100
-888,Free parameter 1,0 to 9998;9999,1,9999,77
-889,Free parameter 2,0 to 9998;9999,1,9999,77
+888,Free parameter 1,0 to 9998;9999,1,9999,80
+889,Free parameter 2,0 to 9998;9999,1,9999,80
 890,Internal storage device status indication,(0 to 255),1,0,0
 891,Cumulative power monitor digit shifted times,0 to 4;9999,1,9999,9999
 892,Load factor,30 to 150,0.1%,100,100
@@ -690,7 +690,7 @@
 1002,Lq tuning target current adjustment coefficient,50 to 150;9999,0.1%,9999,9999
 1006,Clock (year),2000 to 2099,1,2000,2000
 1007,"Clock (month, day)",101 to 131;201 to 229;301 to 331;401 to 430;501 to 531;601 to 630;701 to 731;801 to 831;901 to 930;1001 to 1031;1101 to 1130;1201 to 1231,1,101,106
-1008,"Clock (hour, minute)",0 to 59;100 to 159;200 to 259;300 to 359;400 to 459;500 to 559;600 to 659;700 to 759;800 to 859;900 to 959;1000 to 1059;1100 to 1159;1200 to 1259;1300 to 1359;1400 to 1459;1500 to 1559;1600 to 1659;1700 to 1759;1800 to 1859;1900 to 1959;2000 to 2059;2100 to 2159;2200 to 2259;2300 to 2359,1,0,453
+1008,"Clock (hour, minute)",0 to 59;100 to 159;200 to 259;300 to 359;400 to 459;500 to 559;600 to 659;700 to 759;800 to 859;900 to 959;1000 to 1059;1100 to 1159;1200 to 1259;1300 to 1359;1400 to 1459;1500 to 1559;1600 to 1659;1700 to 1759;1800 to 1859;1900 to 1959;2000 to 2059;2100 to 2159;2200 to 2259;2300 to 2359,1,0,1452
 1009,,1 to 3000;9999,0.1ms,9999,
 1010,,0 to 200,0.1%,100,
 1011,,170 to 1200;9999,0.1V,9999,
@@ -756,14 +756,14 @@
 1108,Excitation current monitor filter,0 to 5;9999,0.01s,9999,9999
 1111,,0 to 400;9999,1%,9999,
 1112,,0 to 400;9999,1%,9999,
-1150,PLC function user parameter 1,0 to 65535,1,0,10
+1150,PLC function user parameter 1,0 to 65535,1,0,24000
 1151,PLC function user parameter 2,0 to 65535,1,0,1
-1152,PLC function user parameter 3,0 to 65535,1,0,48
+1152,PLC function user parameter 3,0 to 65535,1,0,32
 1153,PLC function user parameter 4,0 to 65535,1,0,3600
 1154,PLC function user parameter 5,0 to 65535,1,0,3580
 1155,PLC function user parameter 6,0 to 65535,1,0,3620
-1156,PLC function user parameter 7,0 to 65535,1,0,1000
-1157,PLC function user parameter 8,0 to 65535,1,0,1000
+1156,PLC function user parameter 7,0 to 65535,1,0,100
+1157,PLC function user parameter 8,0 to 65535,1,0,100
 1158,PLC function user parameter 9,0 to 65535,1,0,150
 1159,PLC function user parameter 10,0 to 65535,1,0,0
 1160,PLC function user parameter 11,0 to 65535,1,0,50
@@ -772,7 +772,7 @@
 1163,PLC function user parameter 14,0 to 65535,1,0,1
 1164,PLC function user parameter 15,0 to 65535,1,0,1
 1165,PLC function user parameter 16,0 to 65535,1,0,1
-1166,PLC function user parameter 17,0 to 65535,1,0,1440
+1166,PLC function user parameter 17,0 to 65535,1,0,1500
 1167,PLC function user parameter 18,0 to 65535,1,0,600
 1168,PLC function user parameter 19,0 to 65535,1,0,0
 1169,PLC function user parameter 20,0 to 65535,1,0,0
@@ -801,7 +801,7 @@
 1192,PLC function user parameter 43,0 to 65535,1,0,0
 1193,PLC function user parameter 44,0 to 65535,1,0,0
 1194,PLC function user parameter 45,0 to 65535,1,0,0
-1195,PLC function user parameter 46,0 to 65535,1,0,0
+1195,PLC function user parameter 46,0 to 65535,1,0,23690
 1196,PLC function user parameter 47,0 to 65535,1,0,0
 1197,PLC function user parameter 48,0 to 65535,1,0,1
 1198,PLC function user parameter 49,0 to 65535,1,0,0
