@@ -1,4 +1,4 @@
-(* e800-inverter-counter-v81 *)
+(* e800-inverter-counter-v82 *)
 (* comments take up program space *)
 (*
 Connect mini usb cable
@@ -50,6 +50,7 @@ VAR_GLOBAL	LAST_PU_EXT_MODE	Word[Signed]		D6	%MW0.6	pu/ext state from previous c
 VAR_GLOBAL	SAMPLING_COUNTER	Word[Signed]		D10	%MW0.10	Counts every P.1151 cycles to trigger measure cycle time	
 VAR_GLOBAL	TOO_FAST_COUNTS	Word[Signed]		D11	%MW0.11	Counts too fast cycles	
 VAR_GLOBAL	TOO_SLOW_COUNTS	Word[Signed]		D12	%MW0.12	Counts too slow cycles	
+VAR_GLOBAL	SKIP_INITIAL_SAMPLE	Word[Signed]		D13	%MW0.13	Skip few initial rotation sample pulesses	
 VAR_GLOBAL	REMAINING_COUNTS	Word[Signed]		D14	%MW0.14	how many counts still	
 VAR_GLOBAL	CTRL_PULSE_WIDTH	Word[Signed]		D15	%MW0.15	*0.1s pulse for slower/faster	
 VAR_GLOBAL	INIT_COUNTS	Word[Signed]		D206	%MW0.206	Initial starting counts	P.1150=22 [counts]
@@ -62,7 +63,7 @@ VAR_GLOBAL	MAX_TOO_FAST_COUNTS	Word[Signed]		D212	%MW0.212	MAX too fast *N cycle
 VAR_GLOBAL	MAX_TOO_SLOW_COUNTS	Word[Signed]		D213	%MW0.213	MAX too slow *N cycles	P.1157=10 [counts*P.1151]
 VAR_GLOBAL	MAX_ROTATION_TIMEOUT	Word[Signed]		D214	%MW0.214	MAX time of motor powered without rotation	P.1158=150 [s/10]
 VAR_GLOBAL	STOP_COUNTS	Word[Signed]		D215	%MW0.215	Counts when motor should stops early	P.1159=0 [counts]
-VAR_GLOBAL	MAX_COUNTS_ALLOW_INCREASE	Word[Signed]		D216	%MW0.216	for countdown < P.1160 allow START to increase countdown	P.1160=22 [counts]
+VAR_GLOBAL	MAX_COUNTS_ALLOW_INCREASE	Word[Signed]		D216	%MW0.216	for countdown < this allow START to increase countdown	P.1160=22 [counts]
 VAR_GLOBAL	INCREASE_STEP	Word[Signed]		D217	%MW0.217	number of counts to increase counter while running	P.1161=10 [counts]
 VAR_GLOBAL	DIAL_PUSH_MODE	Word[Signed]		D218	%MW0.218	1-FF.SS too fast/slow 0-cycle time [ms]	P.1162=1 [counts.counts]
 VAR_GLOBAL	START_DELAY	Word[Signed]		D219	%MW0.219	For start button debounce usually 1 for 0.1s delay	P.1163=1 [s/10]
@@ -74,7 +75,6 @@ VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1
 VAR_GLOBAL	SAVED_MOTOR_ENABLE	Word[Signed]		D253	%MW0.253	Saved motor run state M9	P.1197=0
 VAR_GLOBAL	RUN_ROTATION_PULSE	Bit		M3	%MX0.3	when motor is running pulse from sensor	
 VAR_GLOBAL	MOTOR_ENABLE	Bit		M9	%MX0.9	Motor run state	
-VAR_GLOBAL	SAMPLE_PULSE	Bit		M10	%MX0.10	sample now	
 VAR_GLOBAL	START_PULSE	Bit		M11	%MX0.11	Joint start PU or EXT	
 VAR_GLOBAL	STOP_TOO_FAST	Bit		M12	%MX0.12	Too much too slow cycles	
 VAR_GLOBAL	STOP_TOO_SLOW	Bit		M13	%MX0.13	Too much too fast cycles	
@@ -83,6 +83,8 @@ VAR_GLOBAL	EXT_START_PULSE	Bit		M15	%MX0.15	Start pulse from delayed START EXT s
 VAR_GLOBAL	PU_START_PULSE	Bit		M16	%MX0.16	Start pulse from PU start button	
 VAR_GLOBAL	PU_EXT_CHANGE_PULSE	Bit		M17	%MX0.17	Reset counter after changing of pu/ext modes	
 VAR_GLOBAL	STOP_LOGIC	Bit		M19	%MX0.19	Combinatorial logic that stops machine	
+VAR_GLOBAL	SAMPLE_PULSE	Bit		M20	%MX0.20	sample now	
+VAR_GLOBAL	SAMPLE_STABLE_PULSE	Bit		M21	%MX0.21	Skip first rotation pulse	
 VAR_GLOBAL	INCREASE_WHILE_RUNNING	Bit		M23	%MX0.23	START pressed second time may increase counter	
 VAR_GLOBAL	COUNTS_RESET_LOGIC	Bit		M24	%MX0.24	Resets counter when changing PU/EXT and other	
 VAR_GLOBAL	COUNTS_RESET_PULSE	Bit		M25	%MX0.25	Pulse to Reset counter	
@@ -239,8 +241,8 @@ set parameters:
   P.816   9999     torq limit acceleration
   P.817   9999     torq limit deceleration
   P.874   400 %    overload shutdown torq OLT limit maximum
-  P.888   78       free parameter, parameters version
-  P.889   78       free parameter, program version
+  P.888   82       free parameter, parameters version
+  P.889   82       free parameter, program version
   P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
   P.1150  12000    D206 Number of cycles (initial countdown)
   P.1151  10       D207 measure time of N cycles
@@ -327,6 +329,7 @@ IF POWER_ON_PULSE THEN
 	ELSE
 		DISPLAY_FORMAT:=DIAL_PUSH_FF_SS; (* FF.SS too fast/slow counts *)
 	END_IF;
+	SKIP_INITIAL_SAMPLE:=2;
 END_IF;
 
 REMAINING_COUNTS:=DISPLAY_COUNTS-STOP_COUNTS;
@@ -405,8 +408,7 @@ IF START_PULSE THEN
 		TOO_FAST_COUNTS:=0;
 		TOO_SLOW_COUNTS:=0;
 		SAMPLING_COUNTER:=0;
-		MEASURED_CYCLE_TIME:=PID_SETPOINT;
-		LAST_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP;
+		SKIP_INITIAL_SAMPLE:=2;
 	END_IF;
 	MOTOR_ENABLE:=TRUE;
 	SAVED_MOTOR_ENABLE:=1;
@@ -463,10 +465,16 @@ END_IF;
 PLS(SAMPLING_COUNTER>=SAMPLE_CYCLES, SAMPLE_PULSE);
 MOVP(SAMPLE_PULSE, 0, SAMPLING_COUNTER);
 
-(* control loop *)
 IF SAMPLE_PULSE THEN
 	MEASURED_CYCLE_TIME:=CURRENT_CYCLE_TIMESTAMP-LAST_CYCLE_TIMESTAMP;
 	LAST_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP;
+	IF SKIP_INITIAL_SAMPLE>=0 THEN
+		SKIP_INITIAL_SAMPLE:=SKIP_INITIAL_SAMPLE-1;
+	END_IF;
+END_IF;
+(* control loop *)
+SAMPLE_STABLE_PULSE:=SAMPLE_PULSE AND SKIP_INITIAL_SAMPLE<0;
+IF SAMPLE_STABLE_PULSE THEN
 	PID_DEVIATION:=MEASURED_CYCLE_TIME-PID_SETPOINT;
 	CTRL_PULSE_WIDTH:=0;
 	IF MEASURED_CYCLE_TIME<MIN_CYCLE_TIME THEN
@@ -490,6 +498,6 @@ IF SAMPLE_PULSE THEN
 	END_IF;
 END_IF;
 
-OUT_T(NOT(SAMPLE_PULSE), CTRL_PULSE, CTRL_PULSE_WIDTH);
+OUT_T(NOT(SAMPLE_STABLE_PULSE), CTRL_PULSE, CTRL_PULSE_WIDTH);
 RUN_FASTER:=MEASURED_CYCLE_TIME>MAX_CYCLE_TIME AND NOT(CTRL_PULSE);
 RUN_SLOWER:=MEASURED_CYCLE_TIME<MIN_CYCLE_TIME AND NOT(CTRL_PULSE);
