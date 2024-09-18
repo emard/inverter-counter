@@ -1,4 +1,4 @@
-(* e800-inverter-counter-v82 *)
+(* e800-inverter-counter-v83 *)
 (* comments take up program space *)
 (*
 Connect mini usb cable
@@ -50,7 +50,7 @@ VAR_GLOBAL	LAST_PU_EXT_MODE	Word[Signed]		D6	%MW0.6	pu/ext state from previous c
 VAR_GLOBAL	SAMPLING_COUNTER	Word[Signed]		D10	%MW0.10	Counts every P.1151 cycles to trigger measure cycle time	
 VAR_GLOBAL	TOO_FAST_COUNTS	Word[Signed]		D11	%MW0.11	Counts too fast cycles	
 VAR_GLOBAL	TOO_SLOW_COUNTS	Word[Signed]		D12	%MW0.12	Counts too slow cycles	
-VAR_GLOBAL	SKIP_INITIAL_SAMPLE	Word[Signed]		D13	%MW0.13	Skip few initial rotation sample pulesses	
+VAR_GLOBAL	SKIP_SPINUP_COUNTER	Word[Signed]		D13	%MW0.13	Skip few initial rotation sample pulesses	
 VAR_GLOBAL	REMAINING_COUNTS	Word[Signed]		D14	%MW0.14	how many counts still	
 VAR_GLOBAL	CTRL_PULSE_WIDTH	Word[Signed]		D15	%MW0.15	*0.1s pulse for slower/faster	
 VAR_GLOBAL	INIT_COUNTS	Word[Signed]		D206	%MW0.206	Initial starting counts	P.1150=22 [counts]
@@ -69,9 +69,10 @@ VAR_GLOBAL	DIAL_PUSH_MODE	Word[Signed]		D218	%MW0.218	1-FF.SS too fast/slow 0-cy
 VAR_GLOBAL	START_DELAY	Word[Signed]		D219	%MW0.219	For start button debounce usually 1 for 0.1s delay	P.1163=1 [s/10]
 VAR_GLOBAL	RESTART_AT_POWER_ON	Word[Signed]		D220	%MW0.220	power on restart 1-enabled 0-disabled	P.1164=1
 VAR_GLOBAL	BOOT_PU_EXT_MODE	Word[Signed]		D221	%MW0.221	Boot to 1:EXT or 2:PU mode	P.1165=2
-VAR_GLOBAL	MAX_RUN_TIME	Word[Signed]		D222	%MW0.222	max run time [s]	P.1166=9000
+VAR_GLOBAL	MAX_RUN_TIME	Word[Signed]		D222	%MW0.222	max run time [s]	P.1166=9000 [P.1167*s/10]
 VAR_GLOBAL	RUN_TIME_TICKS	Word[Signed]		D223	%MW0.223	How many ticks for 1 unit run time	P.1167=10 [s/10]
-VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1195=22 [counts]
+VAR_GLOBAL	CTRL_AFTER_SPINUP	Word[Signed]		D224	%MW0.224	Skip spinup rotations before speed regulation	P.1168=1 [counts]
+VAR_GLOBAL	SAVED_COUNTS	Word[Signed]		D251	%MW0.251	Counts saved at poweroff	P.1195
 VAR_GLOBAL	SAVED_MOTOR_ENABLE	Word[Signed]		D253	%MW0.253	Saved motor run state M9	P.1197=0
 VAR_GLOBAL	RUN_ROTATION_PULSE	Bit		M3	%MX0.3	when motor is running pulse from sensor	
 VAR_GLOBAL	MOTOR_ENABLE	Bit		M9	%MX0.9	Motor run state	
@@ -189,10 +190,6 @@ Inductive sensor XEPRO IPS12-S4NO50-A2P DC 10-30V NPN/open collector,
 normally open contact.
 When object is approached, sensor makes contact between SIGNAL and GND.
 
-
-setup for first use
--------------------
-
 reset all parameters (but PLC program will stay)
 MODE -> Turn dial anticlockwise -> ALLC -> SET -> 0 
 -> rotate change to 1 -> SET -> 1 should blink
@@ -227,6 +224,7 @@ set parameters:
   P.261   1        on power failure, decelerate to stop
   P.277   0        torque limit (current limit) 0-disabled 1-enabled (required to start?)
   P.414   1        PLC enable (doesn't reset by ALLC, LED P.RUN should turn ON, not blink)
+  P.498  9696     PLC program erase when P.414=0
   P.571   2      s Holding time at start
   P.609   5        PLC is source of deviation value, write -10000..+10000 to SD1248
   P.610   5        PLC is source of measured value (not used)
@@ -241,8 +239,8 @@ set parameters:
   P.816   9999     torq limit acceleration
   P.817   9999     torq limit deceleration
   P.874   400 %    overload shutdown torq OLT limit maximum
-  P.888   82       free parameter, parameters version
-  P.889   82       free parameter, program version
+  P.888   83       parameters version
+  P.889   83       program version
   P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
   P.1150  12000    D206 Number of cycles (initial countdown)
   P.1151  10       D207 measure time of N cycles
@@ -262,9 +260,9 @@ set parameters:
   P.1165  2        D221 onboard RUN: 1:EXT mode (EXT button starts), 2:PU mode (onboard RUN starts)
   P.1166  9000     D222 max run time
   P.1167  10       D223 run time ticks [*0.1s]
+  P.1168  1        D224 skip spinup cycles before regulation
   P.1195  0        D251 auto-saved countdown SD1218 at power off, reloaded at power on
   P.1197  0        D253 auto-saved M9 motor on/off state
-
 
 for PID control set this:
 
@@ -274,31 +272,6 @@ for PID control set this:
   P.1153  6000  ms PID setpoint P.1151=1 cycle time          600ms 100rpm ideal
   P.1154  5715  ms MIN allowed  P.1151=1 cycle time PLC D210 571ms 105rpm too fast limit
   P.1155  6315  ms MAX allowed  P.1151=1 cycle time PLC D211 631ms  95rpm too slow limit
-
-explained PID P.128 parameter
-
-  P.128      0     No PID (default for this program)
-                   speed control using RH/RM "remote" control from internal PLC
-          1010     PID reverse action (can be used with this program)
-                   (when deviation is positive, frequency is increased),
-                   deviation by P.609, measured value by P.610
-          1011     PID forward action (not applicable for this program)
-                   (when deviation is positive, frequency is decreased),
-                   deviation by P.609, measured value by P.610
-
-troubleshooting
----------------
-hold dial pushed, LED should blink and show either
-(P.1162=0) cycle time [ms] or
-(P.1162=1) cycle errors count in FF.SS format
-FF=count of too fast cycles, SS=count of too slow cycles
-this is not yet programmed in this source
-
-errors
-E. 16  reached max count too fast - check P.1154, P.1156
-E. 17  reached max count too slow - check P.1155, P.1157
-E. 18  sensor not working         - check P.1158
-E. 19  workaround to stop from p.79=6
 *)
 
 (* time accumulator done as early as possible *)
@@ -329,7 +302,7 @@ IF POWER_ON_PULSE THEN
 	ELSE
 		DISPLAY_FORMAT:=DIAL_PUSH_FF_SS; (* FF.SS too fast/slow counts *)
 	END_IF;
-	SKIP_INITIAL_SAMPLE:=2;
+	SKIP_SPINUP_COUNTER:=CTRL_AFTER_SPINUP;
 END_IF;
 
 REMAINING_COUNTS:=DISPLAY_COUNTS-STOP_COUNTS;
@@ -408,7 +381,7 @@ IF START_PULSE THEN
 		TOO_FAST_COUNTS:=0;
 		TOO_SLOW_COUNTS:=0;
 		SAMPLING_COUNTER:=0;
-		SKIP_INITIAL_SAMPLE:=2;
+		SKIP_SPINUP_COUNTER:=CTRL_AFTER_SPINUP;
 	END_IF;
 	MOTOR_ENABLE:=TRUE;
 	SAVED_MOTOR_ENABLE:=1;
@@ -468,12 +441,12 @@ MOVP(SAMPLE_PULSE, 0, SAMPLING_COUNTER);
 IF SAMPLE_PULSE THEN
 	MEASURED_CYCLE_TIME:=CURRENT_CYCLE_TIMESTAMP-LAST_CYCLE_TIMESTAMP;
 	LAST_CYCLE_TIMESTAMP:=CURRENT_CYCLE_TIMESTAMP;
-	IF SKIP_INITIAL_SAMPLE>=0 THEN
-		SKIP_INITIAL_SAMPLE:=SKIP_INITIAL_SAMPLE-1;
+	IF SKIP_SPINUP_COUNTER>=0 THEN
+		SKIP_SPINUP_COUNTER:=SKIP_SPINUP_COUNTER-1;
 	END_IF;
 END_IF;
 (* control loop *)
-SAMPLE_STABLE_PULSE:=SAMPLE_PULSE AND SKIP_INITIAL_SAMPLE<0;
+SAMPLE_STABLE_PULSE:=SAMPLE_PULSE AND SKIP_SPINUP_COUNTER<0;
 IF SAMPLE_STABLE_PULSE THEN
 	PID_DEVIATION:=MEASURED_CYCLE_TIME-PID_SETPOINT;
 	CTRL_PULSE_WIDTH:=0;
