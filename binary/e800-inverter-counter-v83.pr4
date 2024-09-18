@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<OperatingSystem>
+		<majorVersion>10</majorVersion>
+		<minorVersion>0</minorVersion>
+		<spMajorVersion>0</spMajorVersion>
+		<spMinorVersion>0</spMinorVersion>
+		<productType1>1</productType1>
+		<productType2>48</productType2>
+		<is64bit>true</is64bit>
+		<lang>1050</lang>
+		<numeric>-123.456.789,00</numeric>
+	</OperatingSystem>
+	<Application name="MELSOFT Series FR Configurator2" version="1.30G">
+		<fileType>PARAMETER</fileType>
+		<lang>en</lang>
+		<functionVersion>1111</functionVersion>
+	</Application>
+	<SetupInfo>
+		<systemName>Inverter System</systemName>
+		<AppPortalFileOutput>1</AppPortalFileOutput>
+		<SystemComment/>
+		<Year>2024</Year>
+		<Month>9</Month>
+		<Day>11</Day>
+		<Hour>8</Hour>
+		<Minute>22</Minute>
+		<Second>54</Second>
+		<communication>
+			<pcPort>-1</pcPort>
+			<portNo>1</portNo>
+			<through>0</through>
+			<timeOut>1000</timeOut>
+			<retryTimes>1</retryTimes>
+			<baudRate>2</baudRate>
+			<dataBits>1</dataBits>
+			<stopBits>2</stopBits>
+			<parity>2</parity>
+			<delimiter>1</delimiter>
+			<pcNodeNo>1</pcNodeNo>
+			<pcUnitProtocol>NOTHING</pcUnitProtocol>
+			<route>0</route>
+			<gotType>NOTHING</gotType>
+			<gotOutputPort>NOTHING</gotOutputPort>
+			<gotIp>0.0.0.0</gotIp>
+			<gotPortNo>5014</gotPortNo>
+			<unit>NOTHING</unit>
+			<unitType>NOTHING</unitType>
+			<unitEther>false</unitEther>
+			<unitNetNo>1</unitNetNo>
+			<unitIp>0.0.0.0</unitIp>
+			<unitNodeNo>1</unitNodeNo>
+			<invNetNo>1</invNetNo>
+		</communication>
+		<projectNodeData nodeNo="0">
+			<invType>FR-E820S-4-0030(0.4K)</invType>
+			<option1>0000</option1>
+			<option2>0000</option2>
+			<option3>0000</option3>
+			<option4>TA-4</option4>
+			<comment/>
+			<ipAddress>0.0.0.0</ipAddress>
+			<portNumber>5001</portNumber>
+			<protocol>UDP</protocol>
+		</projectNodeData>
+	</SetupInfo>
+	<InvType>FR-E820S-4-0030(0.4K)</InvType>
+	<Option Slot="1">0000</Option>
+	<Option Slot="2">0000</Option>
+	<Option Slot="3">0000</Option>
+	<Option Slot="4">TA-4</Option>
+	<ParameterInformation>
+0,Torque boost,0 to 30,0.1%,6,6
+1,Maximum frequency,0 to 120,0.01Hz,120,70
+2,Minimum frequency,0 to 120,0.01Hz,0,20
+3,Base frequency,0 to 590,0.01Hz,50,40
+4,Multi-speed setting (high speed),0 to 590,0.01Hz,50,60
+5,Multi-speed setting (middle speed),0 to 590,0.01Hz,30,30
+6,Multi-speed setting (low speed),0 to 590,0.01Hz,10,10
+7,Acceleration time,0 to 3600,0.1s,5,0.3
+8,Deceleration time,0 to 3600,0.1s,5,0.3
+9,Electronic thermal O/L relay/Rated motor current,0 to 500,0.01A,2.55,2.55
+10,DC injection brake operation frequency,0 to 120,0.01Hz,3,3
+11,DC injection brake operation time,0 to 10;8888,0.1s,0.5,0.5
+12,DC injection brake operation voltage,0 to 30,0.1%,4,4
+13,Starting frequency,0 to 60,0.01Hz,0.5,5
+14,Load pattern selection,0 to 3,1,0,0
+15,Jog frequency,0 to 590,0.01Hz,5,30
+16,Jog acceleration/deceleration time,0 to 3600,0.1s,0.5,0.5
+17,MRS/X10 terminal input selection,0 to 5,1,0,0
+18,High speed maximum frequency,0 to 590,0.01Hz,120,70
+19,Base frequency voltage,0 to 1000;8888;9999,0.1V,8888,8888
+20,Acceleration/deceleration reference frequency,1 to 590,0.01Hz,50,50
+21,Acceleration/deceleration time increments,0;1,1,0,0
+22,Stall prevention operation level (torque limit level),0 to 400,0.1%,150,150
+23,Stall prevention operation level compensation factor at double speed,0 to 200;9999,0.1%,9999,9999
+24,Multi-speed setting (speed 4),0 to 590;9999,0.01Hz,9999,9999
+25,Multi-speed setting (speed 5),0 to 590;9999,0.01Hz,9999,9999
+26,Multi-speed setting (speed 6),0 to 590;9999,0.01Hz,9999,9999
+27,Multi-speed setting (speed 7),0 to 590;9999,0.01Hz,9999,9999
+29,Acceleration/deceleration pattern selection,0 to 2,1,0,1
+30,Regenerative function selection,0 to 2,1,0,0
+31,Frequency jump 1A,0 to 590;9999,0.01Hz,9999,9999
+32,Frequency jump 1B,0 to 590;9999,0.01Hz,9999,9999
+33,Frequency jump 2A,0 to 590;9999,0.01Hz,9999,9999
+34,Frequency jump 2B,0 to 590;9999,0.01Hz,9999,9999
+35,Frequency jump 3A,0 to 590;9999,0.01Hz,9999,9999
+36,Frequency jump 3B,0 to 590;9999,0.01Hz,9999,9999
+37,Speed display,0.01 to 9998,0.001,1800,1800
+40,RUN key rotation direction selection,0;1,1,0,0
+41,Up-to-frequency sensitivity,0 to 100,0.1%,10,10
+42,Output frequency detection,0 to 590,0.01Hz,6,6
+43,Output frequency detection for reverse rotation,0 to 590;9999,0.01Hz,9999,9999
+44,Second acceleration/deceleration time,0 to 3600,0.1s,5,20
+45,Second deceleration time,0 to 3600;9999,0.1s,9999,20
+46,Second torque boost,0 to 30;9999,0.1%,9999,9999
+47,Second V/F (base frequency),0 to 590;9999,0.01Hz,9999,9999
+48,Second stall prevention operation level,0 to 400;9999,0.1%,9999,9999
+51,Second electronic thermal O/L relay/Rated second motor current,0 to 500;9999,0.01A,9999,9999
+52,Operation panel main monitor selection,0;5 to 14;17 to 20;22 to 33;35;38;40 to 42;44;45;50 to 57;61;62;64;65;67;68;71;72;81 to 84;86;91;97;100,1,0,0
+53,Frequency / rotation speed unit switchover,0;1;4,1,0,0
+55,Frequency monitoring reference,0 to 590,0.01Hz,50,50
+56,Current monitoring reference,0 to 500,0.01A,3,3
+57,Restart coasting time,0;0.1 to 30;9999,0.1s,9999,9999
+58,Restart cushion time,0 to 60,0.1s,1,1
+59,Remote function selection,0 to 3;11 to 13,1,0,1
+60,Energy saving control selection,0;9,1,0,9
+61,Reference current,0 to 500;9999,0.01A,9999,9999
+62,Reference value at acceleration,0 to 400;9999,1%,9999,9999
+63,Reference value at deceleration,0 to 400;9999,1%,9999,9999
+65,Retry selection,0 to 5,1,0,0
+66,Stall prevention operation reduction starting frequency,0 to 590,0.01Hz,50,50
+67,Number of retries at fault occurrence,0 to 10;101 to 110,1,0,0
+68,Retry waiting time,0.1 to 600,0.1s,1,1
+69,Retry count display erase,0,1,0,0
+70,Special regenerative brake duty,0 to 100,0.1%,0,0
+71,Applied motor,0;3;5;6;10;13;15;16;20;23;30;33;40;43;50;53;70;73;540;1140;1800;1803;8090;8093;9090;9093,1,0,0
+72,PWM frequency selection,0 to 15,1,1,15
+73,Analog input selection,0;1;6;10;11;16,1,1,1
+74,Input filter time constant,0 to 8,1,1,1
+75,Reset selection/disconnected PU detection/PU stop selection,0 to 3;14 to 17,1,14,14
+77,Parameter write selection,0 to 2,1,0,2
+78,Reverse rotation prevention selection,0 to 2,1,0,0
+79,Operation mode selection,0 to 4;6;7,1,0,6
+80,Motor capacity,0.1 to 30;9999,0.01kW,9999,9999
+81,Number of motor poles,2;4;6;8;10;12;9999,1,9999,9999
+82,Motor excitation current,0 to 500;9999,0.01A,9999,9999
+83,Rated motor voltage,0 to 1000,0.1V,200,200
+84,Rated motor frequency,10 to 400;9999,0.01Hz,9999,9999
+85,,0 to 400;9999,0.01Hz,9999,
+86,,0 to 300;9999,0.1%,9999,
+87,,0 to 1000,0.1%,100,
+89,Speed control gain (Advanced magnetic flux vector),0 to 200;9999,0.1%,9999,9999
+90,Motor constant (R1),0 to 50;9999,0.001Ω,9999,9999
+91,Motor constant (R2),0 to 50;9999,0.001Ω,9999,9999
+92,Motor constant (L1)/d-axis inductance (Ld),0 to 6000;9999,0.1mH,9999,9999
+93,Motor constant (L2)/q-axis inductance (Lq),0 to 6000;9999,0.1mH,9999,9999
+94,Motor constant (X),0 to 100;9999,0.1%,9999,9999
+95,Online auto tuning selection,0;1,1,0,0
+96,Auto tuning setting/status,0;1;11;301,1,0,0
+97,,0;1,1,1,
+98,,0 to 590,0.01Hz,10,
+99,,0 to 15;9999,1,9999,
+117,PU communication station number,0 to 31,1,0,1
+118,PU communication speed,48;96;192;384;576;768;1152,1,192,192
+119,PU communication stop bit length / data length,0;1;10;11,1,1,0
+120,PU communication parity check,0 to 2,1,2,2
+121,Number of PU communication retries,0 to 10;9999,1,1,1
+122,PU communication check time interval,0;0.1 to 999.8;9999,0.1s,0,0
+123,PU communication waiting time setting,0 to 150;9999,1ms,9999,9999
+124,PU communication CR/LF selection,0 to 2,1,1,1
+125,Terminal 2 frequency setting gain frequency,0 to 590,0.01Hz,50,50
+126,Terminal 4 frequency setting gain frequency,0 to 590,0.01Hz,50,50
+127,PID control automatic switchover frequency,0 to 590;9999,0.01Hz,9999,9999
+128,PID action selection,0;20;21;40 to 43;50;51;60;61;1000;1001;1010;1011;2000;2001;2010;2011,1,0,0
+129,PID proportional band,0.1 to 1000;9999,0.1%,100,100
+130,PID integral time,0.1 to 3600;9999,0.1s,1,1
+131,PID upper limit,0 to 100;9999,0.1%,9999,9999
+132,PID lower limit,0 to 100;9999,0.1%,9999,9999
+133,PID action set point,0 to 100;9999,0.01%,9999,9999
+134,PID differential time,0.01 to 10;9999,0.01s,9999,9999
+136,MC switchover interlock time,0 to 100,0.1s,1,1
+139,Automatic switchover frequency from inverter to bypass operation,0 to 60;9999,0.01Hz,9999,9999
+145,PU display language selection,0 to 7,1,-,1
+147,Acceleration/deceleration time switching frequency,0 to 590;9999,0.01Hz,9999,9999
+150,Output current detection level,0 to 400,0.1%,150,150
+151,Output current detection signal delay time,0 to 10,0.1s,0,0
+152,Zero current detection level,0 to 400,0.1%,5,5
+153,Zero current detection time,0 to 10,0.01s,0.5,0.5
+154,Voltage reduction selection during stall prevention operation,1;11,1,1,1
+156,Stall prevention operation selection,0 to 31;100;101,1,0,0
+157,OL signal output timer,0 to 25;9999,0.1s,0,0
+158,AM terminal function selection,1 to 3;5 to 14;17;18;21;24;32;33;50;52 to 54;61;62;65;67;70;86;91;97,1,1,1
+160,User group read selection,0;1;9999,1,0,0
+161,Frequency setting/key lock operation selection,0;1;10;11,1,0,1
+162,Automatic restart after instantaneous power failure selection,0;1;10;11,1,0,0
+165,Stall prevention operation level for restart,0 to 400,0.1%,150,150
+166,Output current detection signal retention time,0 to 10;9999,0.1s,0.1,0.1
+167,Output current detection operation selection,0;1;10;11,1,0,0
+168,Parameter for manufacturer setting,,1,,8650
+169,Parameter for manufacturer setting,,1,,14
+170,Watt-hour meter clear,0;10;9999,1,9999,9999
+171,Operation hour meter clear,0;9999,1,9999,9999
+172,User group registered display/batch clear,(0 to 16);9999,1,0,0
+173,User group registration,0 to 1999;9999,1,9999,9999
+174,User group clear,0 to 1999;9999,1,9999,9999
+177,,0.01 to 0.3,0.01ms,0.1,
+178,STF terminal function selection / DI0 terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;60;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,60,60
+179,STR terminal function selection / DI1 terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;61;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,61,61
+180,RL terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,0,0
+181,RM terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,1,1
+182,RH terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,2,2
+183,MRS terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,24,50
+184,RES terminal function selection,0 to 5;7;8;10;12 to 16;18;22 to 27;30;37;42;43;46;47;50 to 52;54;62;65 to 67;72;74;76;84;87 to 89;92;9999,1,62,62
+185,NET X1 input selection,0 to 4;8;13 to 15;18;22 to 24;26;27;30;37;42;43;46;47;50 to 52;54;72;74;76;84;87 to 89;92;9999,1,9999,9999
+186,NET X2 input selection,0 to 4;8;13 to 15;18;22 to 24;26;27;30;37;42;43;46;47;50 to 52;54;72;74;76;84;87 to 89;92;9999,1,9999,9999
+187,NET X3 input selection,0 to 4;8;13 to 15;18;22 to 24;26;27;30;37;42;43;46;47;50 to 52;54;72;74;76;84;87 to 89;92;9999,1,9999,9999
+188,NET X4 input selection,0 to 4;8;13 to 15;18;22 to 24;26;27;30;37;42;43;46;47;50 to 52;54;72;74;76;84;87 to 89;92;9999,1,9999,9999
+189,NET X5 input selection,0 to 4;8;13 to 15;18;22 to 24;26;27;30;37;42;43;46;47;50 to 52;54;72;74;76;84;87 to 89;92;9999,1,9999,9999
+190,RUN terminal function selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80 to 82;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180 to 182;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,0,0
+191,FU terminal function selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80 to 82;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180 to 182;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,4,4
+192,ABC terminal function selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80 to 82;84;90;91;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180 to 182;184;190;191;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,99,9999
+193,NET Y1 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;198;199;206;211 to 213;306;311 to 313;9999,1,9999,9999
+194,NET Y2 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;198;199;206;211 to 213;306;311 to 313;9999,1,9999,9999
+195,NET Y3 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;198;199;206;211 to 213;306;311 to 313;9999,1,9999,9999
+196,NET Y4 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;198;199;206;211 to 213;306;311 to 313;9999,1,9999,9999
+197,ABC2 terminal function selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90;91;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190;191;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,9999
+198,Display corrosion level,(1 to 3),1,1,1
+232,Multi-speed setting (speed 8),0 to 590;9999,0.01Hz,9999,9999
+233,Multi-speed setting (speed 9),0 to 590;9999,0.01Hz,9999,9999
+234,Multi-speed setting (speed 10),0 to 590;9999,0.01Hz,9999,9999
+235,Multi-speed setting (speed 11),0 to 590;9999,0.01Hz,9999,9999
+236,Multi-speed setting (speed 12),0 to 590;9999,0.01Hz,9999,9999
+237,Multi-speed setting (speed 13),0 to 590;9999,0.01Hz,9999,9999
+238,Multi-speed setting (speed 14),0 to 590;9999,0.01Hz,9999,9999
+239,Multi-speed setting (speed 15),0 to 590;9999,0.01Hz,9999,9999
+240,Soft-PWM operation selection,0;1,1,1,1
+241,Analog input display unit switchover,0;1,1,0,0
+244,Cooling fan operation selection,0;1,1,1,1
+245,Rated slip,0 to 50;9999,0.01%,9999,9999
+246,Slip compensation time constant,0.01 to 10,0.01s,0.5,0.5
+247,Constant output range slip compensation selection,0;9999,1,9999,9999
+249,Earth (ground) fault detection at start,0;1,1,1,1
+250,Stop selection,0 to 100;1000 to 1100;8888;9999,0.1s,9999,9999
+251,Output phase loss protection selection,0;1,1,1,1
+255,Life alarm status display,(0 to 15;32 to 111;256 to 879),1,0,0
+256,Inrush current limit circuit life display,(0 to 100),1%,100,100
+257,Control circuit capacitor life display,(0 to 100),1%,100,100
+258,Main circuit capacitor life display,(0 to 100),1%,100,100
+259,Main circuit capacitor life measuring,0;1,1,0,0
+260,PWM frequency automatic switchover,0;10,1,10,10
+261,Power failure stop selection,0 to 2,1,0,0
+267,Terminal 4 input selection,0 to 2,1,0,0
+268,Monitor decimal digits selection,0;1;9999,1,9999,9999
+269,Parameter for manufacturer setting,,1,,
+270,Stop-on contact control selection,0;1;11,1,0,0
+275,Stop-on contact excitation current low-speed scaling factor,0 to 300;9999,0.1%,9999,9999
+276,PWM carrier frequency at stop-on contact,0 to 9;9999,1,9999,9999
+277,Stall prevention operation current switchover,0;1,1,0,0
+278,Brake opening frequency,0 to 30,0.01Hz,3,3
+279,Brake opening current,0 to 400,0.1%,130,130
+280,Brake opening current detection time,0 to 2,0.1s,0.3,0.3
+281,Brake operation time at start,0 to 5,0.1s,0.3,0.3
+282,Brake operation frequency,0 to 30,0.01Hz,6,6
+283,Brake operation time at stop,0 to 5,0.1s,0.3,0.3
+284,Deceleration detection function selection,0;1,1,0,0
+285,Overspeed detection frequency / Speed deviation excess detection frequency,0 to 30;9999,0.01Hz,9999,9999
+286,Droop gain,0 to 100,0.1%,0,0
+287,Droop filter time constant,0 to 1,0.01s,0.3,0.3
+289,Inverter output terminal filter,5 to 50;9999,1ms,9999,9999
+290,Monitor negative output selection,0;1;4;5;8;9;12;13,1,0,0
+292,Automatic acceleration/deceleration,0;1;7;8;11,1,0,0
+293,Acceleration/deceleration separate selection,0 to 2,1,0,0
+295,Frequency change increment amount setting,0;0.01;0.1;1;10,0.01,0,0
+296,Password lock level,0 to 6;99;100 to 106;199;9999,1,9999,
+297,Password lock/unlock,1000 to 9998(0 to 5);9999,1,9999,
+298,Frequency search gain,0 to 32767;9999,1,9999,9999
+299,Rotation direction detection selection at restarting,0;1;9999,1,0,0
+300,BCD input bias,0 to 590,0.01Hz,0,
+301,BCD input gain,0 to 590;9999,0.01Hz,50,
+302,BIN input bias,0 to 590,0.01Hz,0,
+303,BIN input gain,0 to 590;9999,0.01Hz,50,
+304,Digital input and analog input compensation enable/disable selection,0;1;4;10;11;14;9999,1,9999,
+305,Read timing operation selection,0;1;10,1,0,
+306,Analog output signal selection,1 to 3;5 to 14;17;18;21;24;32;33;50;52 to 54;61;62;65;67;70;91;97,1,2,
+307,Setting for zero analog output,0 to 100,0.1%,0,
+308,Setting for maximum analog output,0 to 100,0.1%,100,
+309,Analog output signal voltage/current switchover,0;1;10;11,1,0,
+310,Analog meter voltage output selection,1 to 3;5 to 14;17;18;21;24;32;33;50;52 to 54;61;62;65;67;70;91;97,1,2,
+311,Setting for zero analog meter voltage output,0 to 100,0.1%,0,
+312,Setting for maximum analog meter voltage output,0 to 100,0.1%,100,
+313,DO0 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+314,DO1 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+315,DO2 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+316,DO3 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+317,DO4 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+318,DO5 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+319,DO6 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90 to 93;95;96;98;99;100;101;103;104;107;108;111 to 116;120;124 to 128;130 to 136;138 to 141;144 to 148;156;157;160 to 166;168;170;180;181;184;190 to 193;195;196;198;199;206;211 to 213;306;311 to 313;9999,1,9999,
+320,RA1 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90;91;95;96;98;99;206;211 to 213;9999,1,0,
+321,RA2 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90;91;95;96;98;99;206;211 to 213;9999,1,1,
+322,RA3 output selection,0;1;3;4;7;8;11 to 16;18 to 20;24 to 28;30 to 36;38 to 41;44 to 48;56;57;60 to 66;68;70;80;81;84;90;91;95;96;98;99;206;211 to 213;9999,1,4,
+323,AM0 0V adjustment,900 to 1100,1%,1000,
+324,AM1 0mA adjustment,900 to 1100,1%,1000,
+329,Digital input unit selection,0;1;2;3,1,1,
+338,Communication operation command source,0;1,1,0,0
+339,Communication speed command source,0 to 2,1,0,0
+340,Communication startup mode selection,0;1;10,1,0,0
+342,Communication EEPROM write selection,0;1,1,0,0
+343,Communication error count,,1,0,0
+345,DeviceNet address,0 to 4095,1,63,
+346,DeviceNet baud rate,0 to 4095,1,132,
+349,Communication reset selection,0;1,1,0,
+350,Stop position command selection,0;9999,1,9999,
+351,Orientation speed,0 to 30,0.01Hz,2,
+352,Creep speed,0 to 10,0.01Hz,0.5,
+353,Creep switchover position,0 to 16383,1,511,
+354,Position loop switchover position,0 to 8191,1,96,
+355,DC injection brake start position,0 to 255,1,5,
+356,Internal stop position command,0 to 16383,1,0,
+357,Orientation in-position zone,0 to 255,1,5,
+358,Servo torque selection,0 to 13,1,1,
+359,Encoder rotation direction,100;101,1,101,
+361,Position shift,0 to 16383,1,0,
+362,Orientation position loop gain,0.1 to 100,0.1,1,
+363,Completion signal output delay time,0 to 5,0.1s,0.5,
+364,Encoder stop check time,0 to 5,0.1s,0.5,
+365,Orientation limit,0 to 60;9999,1s,9999,
+366,Recheck time,0 to 5;9999,0.1s,9999,
+367,Speed feedback range,0 to 590;9999,0.01Hz,9999,
+368,Feedback gain,0 to 100,0.1,1,
+369,Number of encoder pulses,2 to 4096,1,1024,
+374,Overspeed detection level,0 to 590;9999,0.01Hz,9999,9999
+375,Faulty acceleration rate detection level,0 to 400;9999,0.01Hz,9999,9999
+376,Encoder signal loss detection enable/disable selection,0;1,1,0,
+390,% setting reference frequency,1 to 590,0.01Hz,50,50
+393,Orientation selection,0 to 2,1,0,
+396,Orientation speed gain (P term),0 to 1000,1,60,
+397,Orientation speed integral time,0 to 20,0.001s,0.333,
+398,Orientation speed gain (D term),0 to 100,0.1,1,
+399,Orientation deceleration ratio,0 to 1000,1,20,
+414,PLC function operation selection,0 to 2;11;12,1,0,1
+415,Inverter operation lock mode setting,0;1,1,0,0
+418,Extension output terminal filter,5 to 50;9999,1ms,9999,
+420,Command pulse scaling factor numerator (electronic gear numerator),1 to 32767,1,1,1
+421,Command pulse multiplication denominator (electronic gear denominator),1 to 32767,1,1,1
+422,Position control gain,0 to 150,1s^-1,10,10
+423,Position feed forward gain,0 to 100,1%,0,0
+425,Position feed forward command filter,0 to 5,0.001s,0,0
+426,In-position width,0 to 32767,1pulse,100,100
+427,Excessive level error,0 to 400;9999,1Kpulse,40,40
+430,Pulse monitor selection,0 to 5;100 to 105;1000 to 1005;1100 to 1105;8888;9999,1,9999,9999
+446,Model position control gain,0 to 150,1s^-1,25,25
+447,Digital torque command bias,0 to 400,1%,0,
+448,Digital torque command gain,0 to 400;9999,1%,150,
+450,Second applied motor,0;3;5;6;10;13;15;16;20;23;30;33;40;43;50;53;70;73;540;1140;1800;1803;8090;8093;9090;9093;9999,1,9999,9999
+451,Second motor control method selection,10 to 14;20;40;9999,1,9999,9999
+453,Second motor capacity,0.1 to 30;9999,0.01kW,9999,9999
+454,Number of second motor poles,2;4;6;8;10;12;9999,1,9999,9999
+455,Second motor excitation current,0 to 500;9999,0.01A,9999,9999
+456,Rated second motor voltage,0 to 1000,0.1V,200,200
+457,Rated second motor frequency,10 to 400;9999,0.01Hz,9999,9999
+458,Second motor constant (R1),0 to 50;9999,0.001Ω,9999,9999
+459,Second motor constant (R2),0 to 50;9999,0.001Ω,9999,9999
+460,Second motor constant (L1) / d-axis inductance (Ld),0 to 6000;9999,0.1mH,9999,9999
+461,Second motor constant (L2) / q-axis inductance (Lq),0 to 6000;9999,0.1mH,9999,9999
+462,Second motor constant (X),0 to 100;9999,0.1%,9999,9999
+463,Second motor auto tuning setting/status,0;1;11,1,0,0
+464,Digital position control sudden stop deceleration time,0.01 to 360,0.01s,0.01,0.01
+465,First target position lower 4 digits,0 to 9999,1,0,0
+466,First target position upper 4 digits,0 to 9999,1,0,0
+467,Second target position lower 4 digits,0 to 9999,1,0,0
+468,Second target position upper 4 digits,0 to 9999,1,0,0
+469,Third target position lower 4 digits,0 to 9999,1,0,0
+470,Third target position upper 4 digits,0 to 9999,1,0,0
+471,Fourth target position lower 4 digits,0 to 9999,1,0,0
+472,Fourth target position upper 4 digits,0 to 9999,1,0,0
+473,Fifth target position lower 4 digits,0 to 9999,1,0,0
+474,Fifth target position upper 4 digits,0 to 9999,1,0,0
+475,Sixth target position lower 4 digits,0 to 9999,1,0,0
+476,Sixth target position upper 4 digits,0 to 9999,1,0,0
+477,Seventh target position lower 4 digits,0 to 9999,1,0,0
+478,Seventh target position upper 4 digits,0 to 9999,1,0,0
+495,Remote output selection,0;1;10;11,1,0,0
+496,Remote output data 1,0 to 4095,1,0,0
+497,Remote output data 2,0 to 4095,1,0,0
+498,PLC function flash memory clear,0;9696(0 to 9999),1,0,0
+500,Communication error execution waiting time,0 to 999.8,0.1s,0,
+501,Communication error occurrence count display,0,1,0,
+502,Stop mode selection at communication error,0 to 2;6,1,0,0
+503,Maintenance timer,0(1 to 9998),1,0,1
+504,Maintenance timer alarm output set time,0 to 9998;9999,1,9999,9999
+505,Speed setting reference,1 to 590,0.01Hz,50,50
+506,Display estimated main circuit capacitor residual life,(0 to 100),1%,100,100
+507,Display/reset ABC relay contact life,(0 to 100),1%,100,100
+509,Display power cycle life,(0 to 100),0.01%,100,100
+510,Rough match output range,0 to 32767,1,0,0
+511,Home position return shifting speed,0 to 400,0.01Hz,0.5,0.5
+514,Emergency drive dedicated retry waiting time,0.1 to 600;9999,0.1s,9999,9999
+515,Emergency drive dedicated retry count,1 to 200;9999,1,1,1
+523,Emergency drive mode selection,100;111;112;121;122;200;211;212;221;222;300;311;312;321;322;400;411;412;421;422;9999,1,9999,9999
+524,Emergency drive running speed,0 to 590;9999,0.01Hz,9999,9999
+538,Current position retention selection,1;2;11;12;9999,1,9999,9999
+541,Frequency command sign selection,0;1,1,0,
+542,Communication station number (CC-Link),1 to 64,1,1,
+543,Baud rate selection (CC-Link),0 to 4,1,0,
+544,CC-Link extended setting,0;1;12;14;18;38;100;112;114;118;138,1,0,
+547,USB communication station number,0 to 31,1,0,0
+548,USB communication check time interval,0 to 999.8;9999,0.1s,9999,9999
+549,Protocol selection,0 to 2,1,0,0
+550,NET mode operation command source selection,0;2;9999,1,9999,9999
+551,PU mode operation command source selection,2 to 4;9999,1,9999,9999
+552,Frequency jump range,0 to 30;9999,0.01Hz,9999,9999
+553,PID deviation limit,0 to 100;9999,0.1%,9999,9999
+554,PID signal operation selection,0 to 3;10 to 13,1,0,0
+555,Current average time,0.1 to 1,0.1s,1,1
+556,Data output mask time,0 to 20,0.1s,0,0
+557,Current average value monitor signal output reference current,0 to 500,0.01A,3,3
+560,Second frequency search gain,0 to 32767;9999,1,9999,9999
+561,PTC thermistor protection level,0.5 to 30;9999,0.01kΩ,9999,9999
+563,Energization time carrying-over times,(0 to 65535),1,0,0
+564,Operating time carrying-over times,(0 to 65535),1,0,0
+565,,0 to 400;9999,0.01Hz,9999,
+566,,0 to 300;9999,0.1%,9999,
+569,Second motor speed control gain,0 to 200;9999,0.1%,9999,9999
+571,Holding time at a start,0 to 10;9999,0.1s,9999,9999
+574,Second motor online auto tuning,0;1,1,0,0
+575,Output interruption detection time,0 to 3600;9999,0.1s,1,1
+576,Output interruption detection level,0 to 590,0.01Hz,0,0
+577,Output interruption cancel level,900 to 1100,0.1%,1000,1000
+592,Traverse function selection,0 to 2,1,0,0
+593,Maximum amplitude amount,0 to 25,0.1%,10,10
+594,Amplitude compensation amount during deceleration,0 to 50,0.1%,10,10
+595,Amplitude compensation amount during acceleration,0 to 50,0.1%,10,10
+596,Amplitude acceleration time,0.1 to 3600,0.1s,5,5
+597,Amplitude deceleration time,0.1 to 3600,0.1s,5,5
+600,First free thermal reduction frequency 1,0 to 590;9999,0.01Hz,9999,9999
+601,First free thermal reduction ratio 1,1 to 100,1%,100,100
+602,First free thermal reduction frequency 2,0 to 590;9999,0.01Hz,9999,9999
+603,First free thermal reduction ratio 2,1 to 100,1%,100,100
+604,First free thermal reduction frequency 3,0 to 590;9999,0.01Hz,9999,9999
+607,Motor permissible load level,110 to 250,1%,150,150
+608,Second motor permissible load level,110 to 250;9999,1%,9999,9999
+609,PID set point/deviation input selection,2 to 5,1,2,2
+610,PID measured value input selection,2 to 5,1,3,3
+611,Acceleration time at a restart,0 to 3600;9999,0.1s,9999,9999
+612,,0 to 360,0.1s,2,
+613,,0 to 200,0.1%,100,
+614,,0;1,1,0,
+615,,0 to 9;20 to 1000;9999,1,9999,
+616,,20 to 1000,1ms,20,
+618,,0 to 200;9999,1(rad/s),9999,
+619,,0 to 200;9999,1(rad/s),9999,
+620,,0 to 100;9999,0.1%,9999,
+621,,50.1 to 100,0.1%,95,
+622,,50.1 to 100;9999,0.1%,9999,
+624,,0 to 200,1%,100,
+626,,0 to 1.0,0.1,0.5,
+630,,1 to 60;9999,1,20,
+631,Inverter output fault enable/disable selection,0;1,1,0,0
+635,Cumulative pulse clear signal selection,0;1,1,0,
+636,Cumulative pulse division scaling factor,1 to 16384,1,1,
+638,Cumulative pulse storage,0;1,1,0,
+639,Brake opening current selection,0;1,1,0,0
+640,Brake operation frequency selection,0;1,1,0,0
+653,Speed smoothing control,0 to 200,0.1%,0,0
+654,Speed smoothing cutoff frequency,0 to 120,0.01Hz,20,20
+660,Increased magnetic excitation deceleration operation selection,0;1,1,0,0
+661,Magnetic excitation increase rate,0 to 40;9999,0.1%,9999,9999
+662,Increased magnetic excitation current level,0 to 200,0.1%,100,100
+665,Regeneration avoidance frequency gain,0 to 200,0.1%,100,100
+666,,0 to 200,0.1%,100,
+672,,0 to 400;9999,0.1%,9999,
+673,SF-PR slip amount adjustment operation selection,2;4;6;9999,1,9999,9999
+674,SF-PR slip amount adjustment gain,0 to 500,0.1%,100,100
+675,User parameter auto storage function selection,1;9999,1,9999,1
+690,Deceleration check time,0 to 3600;9999,0.1s,1,1
+692,Second free thermal reduction frequency 1,0 to 590;9999,0.01Hz,9999,9999
+693,Second free thermal reduction ratio 1,1 to 100,1%,100,100
+694,Second free thermal reduction frequency 2,0 to 590;9999,0.01Hz,9999,9999
+695,Second free thermal reduction ratio 2,1 to 100,1%,100,100
+696,Second free thermal reduction frequency 3,0 to 590;9999,0.01Hz,9999,9999
+698,Speed control D gain,0 to 100,0.1%,0,0
+699,Input terminal filter,5 to 50;9999,1ms,9999,9999
+702,Maximum motor frequency,0 to 400;9999,0.01Hz,9999,9999
+706,Induced voltage constant (phi f),0 to 5000;9999,0.1mV/(rad/s),9999,9999
+707,Motor inertia (integer),10 to 999;9999,1,9999,9999
+709,,0 to 100;9999,0.1%,9999,
+710,,0 to 100;9999,0.1%,9999,
+711,Motor Ld decay ratio,0 to 100;9999,0.1%,9999,9999
+712,Motor Lq decay ratio,0 to 100;9999,0.1%,9999,9999
+713,,0 to 100;9999,0.1%,9999,
+714,,0 to 100;9999,0.1%,9999,
+715,,0 to 100;9999,1ms,9999,
+717,Starting resistance tuning compensation coefficient 1,0 to 200;9999,0.1%,9999,9999
+718,,0 to 19.999;9999,0.001V,9999,
+719,,0 to 100;9999,0.1%,9999,
+720,Starting resistance tuning compensation coefficient 2,0 to 200;9999,0.1%,9999,9999
+721,Starting magnetic pole position detection pulse width,0 to 6000;9999,1μs,9999,9999
+722,,0 to 360;9999,0.1deg,9999,
+723,,0 to 360;9999,0.1deg,9999,
+724,Motor inertia (exponent),0 to 7;9999,1,9999,9999
+725,Motor protection current level,100 to 500;9999,0.1%,9999,9999
+726,Auto Baudrate/Max Master,0 to 255,1,255,255
+727,Max Info Frames,1 to 255,1,1,1
+728,Device instance number (Upper 3digits),0 to 419,1,0,0
+729,Device instance number (Lower 4digits),0 to 9999,1,0,0
+730,,0 to 300;9999,1%,9999,
+731,,0 to 6000;9999,1rad/s,9999,
+732,,0 to 100;9999,0.1%,9999,
+733,,0 to 100;9999,0.1%,9999,
+734,,0 to 200;9999,1rad/s,9999,
+735,,0 to 200;9999,1rad/s,9999,
+737,Second motor starting resistance tuning compensation coefficient 2,0 to 200;9999,0.1%,9999,9999
+738,Second motor induced voltage constant (phi f),0 to 5000;9999,0.1mV/(rad/s),9999,9999
+739,Second motor Ld decay ratio,0 to 100;9999,0.1%,9999,9999
+740,Second motor Lq decay ratio,0 to 100;9999,0.1%,9999,9999
+741,Second motor starting resistance tuning compensation coefficient 1,0 to 200;9999,0.1%,9999,9999
+742,Second motor magnetic pole detection pulse width,0 to 6000;9999,1μs,9999,9999
+743,Second motor maximum frequency,0 to 400;9999,0.01Hz,9999,9999
+744,Second motor inertia (integer),10 to 999;9999,1,9999,9999
+745,Second motor inertia (exponent),0 to 7;9999,1,9999,9999
+746,Second motor protection current level,100 to 500;9999,0.1%,9999,9999
+747,,0;9999,1,9999,
+748,,0 to 200;9999,0.1%,9999,
+749,,0 to 200;9999,0.1%,9999,
+750,,0 to 10;9999,1,9999,
+751,,0 to 60;9999,0.1s,9999,
+752,,0 to 20;100 to 120;9999,0.01Hz,9999,
+759,PID unit selection,0 to 43;9999,1,9999,9999
+770,,0 to 150;9999,0.1%,9999,
+771,,0 to 150;9999,0.1%,9999,
+772,,0 to 200;9999,0.1%,9999,
+773,,0 to 200;9999,0.1%,9999,
+774,Operation panel monitor selection 1,1 to 3;5 to 14;17 to 20;22 to 33;35;38;40 to 42;44;45;50 to 57;61;62;64;65;67;68;71;72;81 to 84;86;91;97;100;9999,1,9999,9999
+775,Operation panel monitor selection 2,1 to 3;5 to 14;17 to 20;22 to 33;35;38;40 to 42;44;45;50 to 57;61;62;64;65;67;68;71;72;81 to 84;86;91;97;100;9999,1,9999,42
+776,Operation panel monitor selection 3,1 to 3;5 to 14;17 to 20;22 to 33;35;38;40 to 42;44;45;50 to 57;61;62;64;65;67;68;71;72;81 to 84;86;91;97;100;9999,1,9999,41
+779,Operation frequency during communication error,0 to 590;9999,0.01Hz,9999,9999
+780,,0 to 100;9999,0.1%,9999,
+781,,0 to 100;9999,0.1%,9999,
+782,,0 to 1500;9999,0.1%,9999,
+784,,0 to 200;9999,0.1%,9999,
+785,,0 to 200;9999,0.1%,9999,
+786,,0 to 100;9999,0.1%,9999,
+787,,0 to 100;9999,0.1%,9999,
+788,,0;9999,1,9999,
+789,,0 to 100;9999,0.1%,9999,
+790,,0 to 100;9999,0.1%,9999,
+791,Acceleration time in low-speed range,0 to 3600;9999,0.1s,9999,9999
+792,Deceleration time in low-speed range,0 to 3600;9999,0.1s,9999,9999
+793,,0 to 100;9999,0.1%,9999,
+794,,0 to 100;9999,0.1%,9999,
+795,,0 to 200;9999,0.1%,9999,
+796,,0 to 400;9999,1%,9999,
+798,,0 to 1023;9999,1,9999,
+800,Control method selection,0 to 5;9 to 14;19;20;40,1,40,40
+801,Output limit level,0 to 400;9999,0.1%,9999,9999
+802,Pre-excitation selection,0;1,1,0,0
+803,Constant output range torque characteristic selection,0 to 2;10,1,0,0
+804,Torque command source selection,0;1;3 to 6,1,0,0
+805,Torque command value (RAM),600 to 1400,1%,1000,1000
+806,"Torque command value (RAM, EEPROM)",600 to 1400,1%,1000,1000
+807,Speed limit selection,0;1,1,0,0
+808,Speed limit,0 to 400,0.01Hz,50,50
+809,Reverse-side speed limit,0 to 400;9999,0.01Hz,9999,9999
+810,Torque limit input method selection,0 to 2,1,0,0
+811,Set resolution switchover,0;10,1,0,0
+812,Torque limit level (regeneration),0 to 400;9999,0.1%,9999,9999
+813,Torque limit level (3rd quadrant),0 to 400;9999,0.1%,9999,9999
+814,Torque limit level (4th quadrant),0 to 400;9999,0.1%,9999,9999
+815,Torque limit level 2,0 to 400;9999,0.1%,9999,9999
+816,Torque limit level during acceleration,0 to 400;9999,0.1%,9999,9999
+817,Torque limit level during deceleration,0 to 400;9999,0.1%,9999,9999
+820,Speed control P gain 1,0 to 1000,1%,60,60
+821,Speed control integral time 1,0 to 20,0.001s,0.333,0.333
+822,Speed setting filter 1,0 to 5;9999,0.001s,9999,9999
+823,Speed detection filter 1,0 to 0.01,0.001s,0.001,
+824,Torque control P gain 1 (current loop proportional gain),0 to 500,1%,100,100
+825,Torque control integral time 1 (current loop integral time),0 to 500,0.1ms,5,5
+826,Torque setting filter 1,0 to 5;9999,0.001s,9999,9999
+828,Model speed control gain,0 to 1000,1rad/s,100,100
+830,Speed control P gain 2,0 to 1000;9999,1%,9999,9999
+831,Speed control integral time 2,0 to 20;9999,0.001s,9999,9999
+832,Speed setting filter 2,0 to 5;9999,0.001s,9999,9999
+833,Speed detection filter 2,0 to 0.01;9999,0.001s,9999,
+834,Torque control P gain 2 (current loop proportional gain),0 to 500;9999,1%,9999,9999
+835,Torque control integral time 2 (current loop integral time),0 to 500;9999,0.1ms,9999,9999
+836,Torque setting filter 2,0 to 5;9999,0.001s,9999,9999
+840,Torque bias selection,0 to 3;9999,1,9999,9999
+841,Torque bias 1,600 to 1400;9999,1%,9999,9999
+842,Torque bias 2,600 to 1400;9999,1%,9999,9999
+843,Torque bias 3,600 to 1400;9999,1%,9999,9999
+844,Torque bias filter,0 to 5;9999,0.001s,9999,9999
+845,Torque bias operation time,0 to 5;9999,0.01s,9999,9999
+846,Torque bias balance compensation,0 to 100;9999,0.1%,9999,9999
+847,Fall-time torque bias terminal 4 bias,0 to 400;9999,1%,9999,9999
+848,Fall-time torque bias terminal 4 gain,0 to 400;9999,1%,9999,9999
+849,Analog input offset adjustment,0 to 200,0.1%,100,100
+850,Brake operation selection,0 to 2,1,0,0
+853,Speed deviation time,0 to 100,0.1s,1,1
+854,Excitation ratio,0 to 100,1%,100,100
+858,Terminal 4 function assignment,0;4;6;9999,1,0,0
+859,Torque current/Rated PM motor current,0 to 500;9999,0.01A,9999,9999
+860,Second motor torque current/Rated PM motor current,0 to 500;9999,0.01A,9999,9999
+864,Torque detection,0 to 400,0.1%,150,150
+865,Low speed detection,0 to 590,0.01Hz,1.5,1.5
+866,Torque monitoring reference,0 to 400,0.1%,150,150
+867,AM output filter,0 to 5,0.01s,0.01,0.01
+870,Speed detection hysteresis,0 to 15,0.01Hz,0,0
+873,Speed limit,0 to 400,0.01Hz,20,
+874,OLT level setting,0 to 400,0.1%,150,150
+877,Speed feed forward control/model adaptive speed control selection,0 to 2,1,0,0
+878,Speed feed forward filter,0.01 to 1,0.01s,0.01,0.01
+879,Speed feed forward torque limit,0 to 400,0.1%,150,150
+880,Load inertia ratio,0 to 200,0.1,7,7
+881,Speed feed forward gain,0 to 1000,1%,0,0
+882,Regeneration avoidance operation selection,0 to 2,1,0,0
+883,Regeneration avoidance operation level,300 to 1200,0.1V,400,400
+885,Regeneration avoidance compensation frequency limit value,0 to 45;9999,0.01Hz,6,6
+886,Regeneration avoidance voltage gain,0 to 200,0.1%,100,100
+888,Free parameter 1,0 to 9998;9999,1,9999,81
+889,Free parameter 2,0 to 9998;9999,1,9999,81
+890,Internal storage device status indication,(0 to 255),1,0,0
+891,Cumulative power monitor digit shifted times,0 to 4;9999,1,9999,9999
+892,Load factor,30 to 150,0.1%,100,100
+893,Energy saving monitor reference (motor capacity),0.1 to 30,0.01kW,0.4,0.4
+894,Control selection during commercial power-supply operation,0 to 3,1,0,0
+895,Power saving rate reference value,0;1;9999,1,9999,9999
+896,Power unit cost,0 to 500;9999,0.01,9999,9999
+897,Power saving monitor average time,0 to 1000;9999,1h,9999,9999
+898,Power saving cumulative monitor clear,0;1;10;9999,1,9999,9999
+899,Operation time rate (estimated value),0 to 100;9999,0.1%,9999,9999
+901,AM terminal calibration,0 to 8191,1,4095,
+902,Terminal 2 frequency setting bias frequency,0 to 590,0.01Hz,0,0
+902_1,Terminal 2 frequency setting bias,0 to 300,0.1%,0,0
+903,Terminal 2 frequency setting gain frequency,0 to 590,0.01Hz,50,50
+903_1,Terminal 2 frequency setting gain,0 to 300,0.1%,100,100
+904,Terminal 4 frequency setting bias frequency,0 to 590,0.01Hz,0,0
+904_1,Terminal 4 frequency setting bias,0 to 300,0.1%,20,20
+905,Terminal 4 frequency setting gain frequency,0 to 590,0.01Hz,50,50
+905_1,Terminal 4 frequency setting gain,0 to 300,0.1%,100,100
+906,,0 to 1200,0.1V,215,
+906_1,,0 to 4096,1,447,
+907,,0 to 1200,0.1V,400,
+907_1,,0 to 4096,1,820,
+908,,0.1 to 22,0.01kW,0.4,
+911,,0 to 65535,1,0,
+911_1,,0 to 65535,1,-1,
+912,,0 to 65535,1,0,
+912_1,,0 to 65535,1,-1,
+932,Terminal 4 bias command (torque/magnetic flux),0 to 400,0.1%,0,0
+932_1,Terminal 4 bias (torque/magnetic flux),0 to 300,0.1%,0,0
+933,Terminal 4 gain command (torque/magnetic flux),0 to 400,0.1%,150,150
+933_1,Terminal 4 gain (torque/magnetic flux),0 to 300,0.1%,100,100
+934,PID display bias coefficient,0 to 500;9999,0.01,9999,9999
+934_1,PID display bias analog value,0 to 300,0.1%,20,20
+935,PID display gain coefficient,0 to 500;9999,0.01,9999,9999
+935_1,PID display gain analog value,0 to 300,0.1%,100,100
+940,,0 to 1000;9999,0.1%,9999,
+942,,8888;9999,0.1,9999,
+949,,0 to 99,1,0,
+951,,0 to 65535,1,0,
+952,,0 to 65535,1,0,
+953,,0 to 65535,1,0,
+954,,0 to 65535,1,0,
+955,,0 to 65535,1,0,
+956,,0 to 65535,1,0,
+957,,0 to 65535,1,0,
+958,,0 to 65535,1,0,
+959,,0 to 65535,1,0,
+960,,0 to 65535,1,0,
+961,,0 to 65535,1,0,
+962,,0 to 65535,1,0,
+971,,2;9999,1,9999,
+972,,0 to 2,1,1,
+973,,1;9999,1,9999,
+978,,0;1,1,1,
+979,Position accuracy compensation gain 1,90 to 110;9999,0.01%,9999,9999
+980,Position accuracy compensation gain 2,90 to 110;9999,0.01%,9999,9999
+981,Position accuracy compensation gain 3,90 to 110;9999,0.01%,9999,9999
+982,,0 to 200;9999,1%,9999,
+983,,0 to 500;9999,0.1,9999,
+984,,0 to 200;9999,1%,9999,
+985,,0 to 500;9999,0.1,9999,
+990,PU buzzer control,0;1,1,1,1
+991,PU contrast adjustment,0 to 63,1,58,58
+992,Operation panel setting dial push monitor selection,0 to 3;5 to 14;17 to 20;22 to 33;35;38;40 to 42;44;45;50 to 57;61;62;64;65;67;68;71;72;81 to 84;86;91;97;100,1,0,40
+997,Fault initiation,0 to 255;9999,1,9999,9999
+998,PM parameter initialization,0;3024;3044;3124;3144;8009;8109;9009;9109,1,0,0
+999,Automatic parameter setting,10;12;20;21;9999,1,9999,9999
+1002,Lq tuning target current adjustment coefficient,50 to 150;9999,0.1%,9999,9999
+1006,Clock (year),2000 to 2099,1,2000,2000
+1007,"Clock (month, day)",101 to 131;201 to 229;301 to 331;401 to 430;501 to 531;601 to 630;701 to 731;801 to 831;901 to 930;1001 to 1031;1101 to 1130;1201 to 1231,1,101,108
+1008,"Clock (hour, minute)",0 to 59;100 to 159;200 to 259;300 to 359;400 to 459;500 to 559;600 to 659;700 to 759;800 to 859;900 to 959;1000 to 1059;1100 to 1159;1200 to 1259;1300 to 1359;1400 to 1459;1500 to 1559;1600 to 1659;1700 to 1759;1800 to 1859;1900 to 1959;2000 to 2059;2100 to 2159;2200 to 2259;2300 to 2359,1,0,2326
+1009,,1 to 3000;9999,0.1ms,9999,
+1010,,0 to 200,0.1%,100,
+1011,,170 to 1200;9999,0.1V,9999,
+1012,,0 to 500,0.1%,100,
+1013,Running speed after emergency drive retry reset,0 to 590,0.01Hz,50,50
+1015,Integral stop selection at limited frequency,0 to 2,1,0,0
+1016,PTC thermistor protection detection time,0 to 60,1s,0,0
+1017,,0;1,1,0,
+1020,Trace operation selection,0 to 3,1,0,0
+1021,,0,1,0,
+1022,Sampling cycle,1;2;5;10;50;100;500;1000,1,1,1
+1023,Number of analog channels,1 to 8,1,4,4
+1024,Sampling auto start,0;1,1,0,0
+1025,Trigger mode selection,0 to 4,1,0,0
+1026,Number of sampling before trigger,0 to 100,1%,90,90
+1027,Analog source selection (1ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,201,201
+1028,Analog source selection (2ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,202,202
+1029,Analog source selection (3ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,203,203
+1030,Analog source selection (4ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,204,204
+1031,Analog source selection (5ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,205,205
+1032,Analog source selection (6ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,206,206
+1033,Analog source selection (7ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,207,207
+1034,Analog source selection (8ch),1 to 3;5 to 14;17 to 20;22 to 24;32;33;35;40 to 42;52 to 54;61;62;64;65;67;68;71;72;81 to 84;86;91;97;201 to 210;212;213;222 to 227;229 to 232;235 to 238,1,208,208
+1035,Analog trigger channel,1 to 8,1,1,1
+1036,Analog trigger operation selection,0;1,1,0,0
+1037,Analog trigger level,600 to 1400,1,1000,1000
+1038,Digital source selection (1ch),0 to 255,1,0,0
+1039,Digital source selection (2ch),0 to 255,1,0,0
+1040,Digital source selection (3ch),0 to 255,1,0,0
+1041,Digital source selection (4ch),0 to 255,1,0,0
+1042,Digital source selection (5ch),0 to 255,1,0,0
+1043,Digital source selection (6ch),0 to 255,1,0,0
+1044,Digital source selection (7ch),0 to 255,1,0,0
+1045,Digital source selection (8ch),0 to 255,1,0,0
+1046,Digital trigger channel,1 to 8,1,1,1
+1047,Digital trigger operation selection,0;1,1,0,0
+1051,,0;10,1,0,
+1054,,0 to 200,0.1%,100,
+1055,,0 to 15,1,2,
+1056,,0 to 400,0.1%,170,
+1060,,0 to 50;9999,1,9999,
+1061,,0 to 500,1%,200,
+1063,,0 to 100;9999,1,10,
+1064,,10 to 100;9999,1%,9999,
+1066,,0 to 3;1000 to 1063;2000 to 2003;3000 to 3063,1,0,
+1072,DC brake judgment time for anti-sway control operation,0 to 10,0.1s,3,3
+1073,Anti-sway control operation selection,0;1,1,0,0
+1074,Anti-sway control frequency,0.05 to 3;9999,0.001Hz,9999,9999
+1075,Anti-sway control depth,0 to 3,1,0,0
+1076,Anti-sway control width,0 to 3,1,0,0
+1077,Rope length,0.1 to 100,0.1m,1,1
+1078,Trolley weight,0 to 50000,1Kg,0,0
+1079,Load weight,0 to 50000,1Kg,0,0
+1092,,0;0.5 to 50;9999,0.1ms,0,
+1093,,0 to 100;9999,1%,9999,
+1100,,0 to 200;9999,0.1%,9999,
+1101,,0 to 200;9999,0.1%,9999,
+1102,,20 to 200;9999,0.1%,9999,
+1103,Deceleration time at emergency stop,0 to 3600,0.1s,5,5
+1104,,0 to 50;9999,0.01Hz,9999,
+1106,Torque monitor filter,0 to 5;9999,0.01s,9999,9999
+1107,Running speed monitor filter,0 to 5;9999,0.01s,9999,9999
+1108,Excitation current monitor filter,0 to 5;9999,0.01s,9999,9999
+1111,,0 to 400;9999,1%,9999,
+1112,,0 to 400;9999,1%,9999,
+1150,PLC function user parameter 1,0 to 65535,1,0,43200
+1151,PLC function user parameter 2,0 to 65535,1,0,1
+1152,PLC function user parameter 3,0 to 65535,1,0,24
+1153,PLC function user parameter 4,0 to 65535,1,0,2000
+1154,PLC function user parameter 5,0 to 65535,1,0,1990
+1155,PLC function user parameter 6,0 to 65535,1,0,2010
+1156,PLC function user parameter 7,0 to 65535,1,0,99
+1157,PLC function user parameter 8,0 to 65535,1,0,99
+1158,PLC function user parameter 9,0 to 65535,1,0,150
+1159,PLC function user parameter 10,0 to 65535,1,0,0
+1160,PLC function user parameter 11,0 to 65535,1,0,50
+1161,PLC function user parameter 12,0 to 65535,1,0,0
+1162,PLC function user parameter 13,0 to 65535,1,0,1
+1163,PLC function user parameter 14,0 to 65535,1,0,1
+1164,PLC function user parameter 15,0 to 65535,1,0,1
+1165,PLC function user parameter 16,0 to 65535,1,0,1
+1166,PLC function user parameter 17,0 to 65535,1,0,1440
+1167,PLC function user parameter 18,0 to 65535,1,0,600
+1168,PLC function user parameter 19,0 to 65535,1,0,1
+1169,PLC function user parameter 20,0 to 65535,1,0,0
+1170,PLC function user parameter 21,0 to 65535,1,0,0
+1171,PLC function user parameter 22,0 to 65535,1,0,0
+1172,PLC function user parameter 23,0 to 65535,1,0,1
+1173,PLC function user parameter 24,0 to 65535,1,0,0
+1174,PLC function user parameter 25,0 to 65535,1,0,0
+1175,PLC function user parameter 26,0 to 65535,1,0,0
+1176,PLC function user parameter 27,0 to 65535,1,0,0
+1177,PLC function user parameter 28,0 to 65535,1,0,0
+1178,PLC function user parameter 29,0 to 65535,1,0,0
+1179,PLC function user parameter 30,0 to 65535,1,0,0
+1180,PLC function user parameter 31,0 to 65535,1,0,0
+1181,PLC function user parameter 32,0 to 65535,1,0,0
+1182,PLC function user parameter 33,0 to 65535,1,0,0
+1183,PLC function user parameter 34,0 to 65535,1,0,0
+1184,PLC function user parameter 35,0 to 65535,1,0,0
+1185,PLC function user parameter 36,0 to 65535,1,0,0
+1186,PLC function user parameter 37,0 to 65535,1,0,0
+1187,PLC function user parameter 38,0 to 65535,1,0,0
+1188,PLC function user parameter 39,0 to 65535,1,0,0
+1189,PLC function user parameter 40,0 to 65535,1,0,0
+1190,PLC function user parameter 41,0 to 65535,1,0,0
+1191,PLC function user parameter 42,0 to 65535,1,0,0
+1192,PLC function user parameter 43,0 to 65535,1,0,0
+1193,PLC function user parameter 44,0 to 65535,1,0,0
+1194,PLC function user parameter 45,0 to 65535,1,0,0
+1195,PLC function user parameter 46,0 to 65535,1,0,0
+1196,PLC function user parameter 47,0 to 65535,1,0,0
+1197,PLC function user parameter 48,0 to 65535,1,0,0
+1198,PLC function user parameter 49,0 to 65535,1,0,0
+1199,PLC function user parameter 50,0 to 65535,1,0,0
+1200,AM output offset calibration,2700 to 3300,1,3000,3000
+1202,,0;9999,1,9999,
+1203,,0 to 65534,1,65535,
+1204,,0;10;20;9999,1,9999,
+1205,,950 to 1050;9999,0.1,9999,
+1206,,0 to 1000;9999,0.1%,9999,
+1222,First positioning acceleration time,0.01 to 360,0.01s,5,5
+1223,First positioning deceleration time,0.01 to 360,0.01s,5,5
+1225,First positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1226,Second positioning acceleration time,0.01 to 360,0.01s,5,5
+1227,Second positioning deceleration time,0.01 to 360,0.01s,5,5
+1229,Second positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1230,Third positioning acceleration time,0.01 to 360,0.01s,5,5
+1231,Third positioning deceleration time,0.01 to 360,0.01s,5,5
+1233,Third positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1234,Fourth positioning acceleration time,0.01 to 360,0.01s,5,5
+1235,Fourth positioning deceleration time,0.01 to 360,0.01s,5,5
+1237,Fourth positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1238,Fifth positioning acceleration time,0.01 to 360,0.01s,5,5
+1239,Fifth positioning deceleration time,0.01 to 360,0.01s,5,5
+1241,Fifth positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1242,Sixth positioning acceleration time,0.01 to 360,0.01s,5,5
+1243,Sixth positioning deceleration time,0.01 to 360,0.01s,5,5
+1245,Sixth positioning sub-function,0;1;10;11;100;101;110;111,1,10,10
+1246,Seventh positioning acceleration time,0.01 to 360,0.01s,5,5
+1247,Seventh positioning deceleration time,0.01 to 360,0.01s,5,5
+1249,Seventh positioning sub-function,0;10;100;110,1,10,10
+1282,Home position return method selection,2 to 4;6;103;106;203;206,1,4,4
+1283,Home position return speed,0 to 400,0.01Hz,2,2
+1285,Home position shift amount lower 4 digits,0 to 9999,1,0,0
+1286,Home position shift amount upper 4 digits,0 to 9999,1,0,0
+1289,Home position return stopper torque,0 to 200,0.1%,40,40
+1290,Home position return stopper waiting time,0 to 10,0.1s,0.5,0.5
+1292,Position control terminal input selection,0;1;10;11;100;101;110;111,1,0,0
+1293,Roll feeding mode selection,0 to 2,1,0,0
+1294,Position detection lower 4 digits,0 to 9999,1,0,0
+1295,Position detection upper 4 digits,0 to 9999,1,0,0
+1296,Position detection selection,0 to 2,1,0,0
+1297,Position detection hysteresis width,0 to 32767,1,0,0
+1298,Second position control gain,0 to 150,1s^-1,10,10
+1299,Second pre-excitation selection,0;1,1,0,0
+1412,Motor induced voltage constant (phi f) exponent,0 to 2;9999,1,9999,9999
+1413,Second motor induced voltage constant (phi f) exponent,0 to 2;9999,1,9999,9999
+1423,,0.1 to 30;9999,0.1s,9999,
+1480,Load characteristics measurement mode,0;1(2 to 5;81 to 85),1,0,0
+1481,Load characteristics load reference 1,0 to 400;8888;9999,0.1%,9999,9999
+1482,Load characteristics load reference 2,0 to 400;8888;9999,0.1%,9999,9999
+1483,Load characteristics load reference 3,0 to 400;8888;9999,0.1%,9999,9999
+1484,Load characteristics load reference 4,0 to 400;8888;9999,0.1%,9999,9999
+1485,Load characteristics load reference 5,0 to 400;8888;9999,0.1%,9999,9999
+1486,Load characteristics maximum frequency,0 to 590,0.01Hz,50,50
+1487,Load characteristics minimum frequency,0 to 590,0.01Hz,6,6
+1488,Upper limit warning detection width,0 to 400;9999,0.1%,20,20
+1489,Lower limit warning detection width,0 to 400;9999,0.1%,20,20
+1490,Upper limit fault detection width,0 to 400;9999,0.1%,9999,9999
+1491,Lower limit fault detection width,0 to 400;9999,0.1%,9999,9999
+1492,Load status detection signal delay time / load reference measurement waiting time,0 to 60,0.1s,1,1
+1499,,,1,65535,
+</ParameterInformation>
+</Root>
