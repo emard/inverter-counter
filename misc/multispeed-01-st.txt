@@ -1,4 +1,8 @@
 (* Multispeed loop v01 *)
+(* freq change order:
+P.6 P.5 P.24 P.4 P.25 P.26 P.27 P.27 P.26 P.25 P.4 P.24 P.5 P.6 Hz
+P.1150 *0.1s time to hold one freq
+*)
 (*
   ALLC    1        resets most parameters to factory default
   P.0    10.0   %  torque boost (required to start 100W vibro-motor)
@@ -87,9 +91,9 @@ IF POWER_ON_PULSE THEN
 	PLC_MOTOR_USE_SOFT_REG_CTRL:=FALSE;
 END_IF;
 OUT_T(TRUE, POWER_ON_DELAYED, 2); (* becomes true 0.2 s after power on, required for start after power on *)
-(* 2 timera trebaju za 1 blink led *)
-OUT_T( NOT(NEXT_SPEED) (* input *), NEXT_SPEED (* timer modul *), HOLD_SPEED (* vrijeme P.1150 off *) );
-(* ABC_RELAY:=SPEED_SWITCH; *) (* izlaz Y5 pali ABC relay kad je p.192=9999 *)
+(* timer output is a pulse *)
+OUT_T( NOT(NEXT_SPEED) (* input *), NEXT_SPEED (* timer module *), HOLD_SPEED (* time P.1150 *) );
+(* ABC_RELAY:=INC_SPEED_INDEX; *) (* output Y5 turns on ABC relay when P.192=9999 *)
 IF NEXT_SPEED THEN (* pulse *)
     IF INC_SPEED_INDEX THEN
         IF SPEED_INDEX<7 THEN
@@ -106,7 +110,7 @@ IF NEXT_SPEED THEN (* pulse *)
     END_IF;
     MOTOR_RUN_STF:=POWER_ON_DELAYED AND INC_SPEED_INDEX;
     MOTOR_RUN_STR:=POWER_ON_DELAYED AND NOT(INC_SPEED_INDEX);
-    MOTOR_SPEED_RL:=SPEED_INDEX MOD 2>0;
-    MOTOR_SPEED_RM:=SPEED_INDEX/2 MOD 2>0;
-    MOTOR_SPEED_RH:=SPEED_INDEX/4 MOD 2>0;
+    MOTOR_SPEED_RL:=SPEED_INDEX MOD 2>0; (* &1 *)
+    MOTOR_SPEED_RM:=SPEED_INDEX/2 MOD 2>0; (* &2 *)
+    MOTOR_SPEED_RH:=SPEED_INDEX/4 MOD 2>0; (* &4 *)
 END_IF;
