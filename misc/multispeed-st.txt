@@ -6,17 +6,17 @@ EXT mode changes speed in order P.6 P.5 P.4 P.24 P.25 P.26 P.27 P.27 P.26 P.25 P
 *)
 (*
   ALLC    1        resets most parameters to factory default
-  P.0    10.0   %  torque boost (required to start 100W vibro-motor)
-  P.1    88.00  Hz max freq
-  P.2    41.00  Hz min freq this is default running freq
+  P.0    10.0   %  torque boost (required to start at 6Hz 100W vibro-motor)
+  P.1    80.00  Hz max freq
+  P.2     6.00  Hz min freq this is default running freq
   P.3    50.00  Hz Base freq
   P.4    27.50  Hz speed index=4 (RH) (max water-jump)
   P.5    12.50  Hz speed index=2 (RM) (max vertical amplitude)
   P.6     6.00  Hz speed index=1 (RL) (max side amplitude)
   P.7     0.5   s  Acceleration time (required to start)
   P.8     0.5   s  Deceleration time (adjust to park)
-  P.9     3.80  A  rated motor current (required to start)
-  P.13   19.00  Hz starting frequency (required to start)
+  P.9     2.55  A  rated motor current (required to start)
+  P.13    6.00  Hz starting frequency (required to start)
   P.14    0        load pattern selection 0:V/f = const 1:V/f^2 = const
   P.15   50.00  Hz freq in "JOG" mode while holding "RUN" button
   P.22    150   %  stall prevention
@@ -26,15 +26,12 @@ EXT mode changes speed in order P.6 P.5 P.4 P.24 P.25 P.26 P.27 P.27 P.26 P.25 P
   P.27   52.00  Hz speed index=7 (RL+RM+RH) speed
   P.29    1        s-pattern acceleration/decelration
   P.37   50.00     instead of Hz show rate @ 50 Hz see P.53=4 P.505=50 
-  P.44   20.0   s  2nd acceleration (RH/RM remote control)
-  P.45   20.0   s  2nd deceleration (RH/RM remote control)
   P.53    0        display 0:freq 4:rate by P.37
   P.59    0        0:multispeed RH/RM/RL, 1:RH/RM faster/slower remembers, 2:faster/slower forgets
   P.60    9        power saving, (required to start)
   P.72    0    kHz 0-default 0.7kHz, 15kHz fastest PWM, "silent" operation
   P.79    0        PU/EXT mode, LEDs PU=OFF EXT=ON
   P.82    0.00  A  motor excitation current
-  P.127  50.00  Hz PID start with linear accelerate to this freq, then switch to PID control
   P.128   0        0:No PID (default), 1010:PID (optional)
   P.156   0        stall prevention P.22 bitmap 0-all enabled 31-all disabled
   P.161   1        dial accepts freq imediately
@@ -47,9 +44,6 @@ EXT mode changes speed in order P.6 P.5 P.4 P.24 P.25 P.26 P.27 P.27 P.26 P.25 P
   P.498  9696      PLC program erase when P.414=0
   P.505  50.00  Hz reference for rate display see P.37 P.53
   P.571   9999     s  Holding time at start
-  P.609   5        PLC is source of deviation value, write -10000..+10000 to SD1248
-  P.610   5        PLC is source of measured value (not used)
-  P.675   1        PLC auto-save P.1195-P.1199 PLC D251-D255 at power off
   P.775   42       LED 2nd menu displays countdown value at SD1217 (instead of motor current A)
 * P.775   2        LED 2nd menu shows motor current A
   P.776   41       LED 3rd menu displays run time value at SD1218
@@ -60,10 +54,10 @@ EXT mode changes speed in order P.6 P.5 P.4 P.24 P.25 P.26 P.27 P.27 P.26 P.25 P
   P.816   9999     torq limit acceleration
   P.817   9999     torq limit deceleration
   P.874   400 %    overload shutdown torq OLT limit maximum
-  P.888   1       parameters version
-  P.889   1       program version
-  P.992   40       when dial pushed LED displays cycle time or too fast/slow counts
-  P.1150  100       D206 *0.1s duration to keep a freq
+  P.888   5        parameters version
+  P.889   5        program version
+  P.992   40       when dial pushed LED displays value at SD1216
+  P.1150  100      D206 *0.1s duration to keep a freq
 *)
 (* Global Label *)
 (*
